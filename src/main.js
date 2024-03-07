@@ -86,21 +86,22 @@ class ProductManager {
 
 const fs = require("fs");
 const path = "./products.json"
-const content = "[]";
-fs.writeFile(path, content, (error) => {
-    if (error) {
-        console.error("No se pudo crear el archivo")
-    } else {
-        console.log("Archivo creado con exito")
-    }
-})
-
+if (!fs.existsSync(path)) {
+    const content = "[]";
+    fs.writeFile(path, content, (error) => {
+        if (error) {
+            console.error("No se pudo crear el archivo");
+        } else {
+            console.log("Archivo creado con éxito");
+        }
+    });
+};
 let manager = new ProductManager();
 manager.getProducts();
 manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
 manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
-//manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
-//manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
+manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
+manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
 manager.getProducts();
 //manager.getProductById(`03`);
 //manager.getProductById(1);
