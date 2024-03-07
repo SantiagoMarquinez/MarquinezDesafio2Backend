@@ -9,7 +9,6 @@ class Product {
         this.id = id;
     }
 }
-
 class ProductManager {
     static id = 0;
     constructor() {
@@ -17,91 +16,88 @@ class ProductManager {
         this.path = path;
     }
 
-    //METODOS
+    async init() {
+        try {
+            // Verificar si el archivo JSON existe
+            if (fs.existsSync(this.path)) {
+                // Leer productos del archivo JSON si existe
+                const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
+                this.products = JSON.parse(verProductsJson);
+            } else {
+                // Si el archivo no existe, crearlo con un array vacío
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+            }
+        } catch (error) {
+            console.error("Error al inicializar ProductManager:", error);
+        }
+    }
+
     async addProduct(title, description, price, thumbnail, code, stock) {
-        //aca veo si tengo algo en el Json y si hay algo se almacena en verProductsJson
-        const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
-        if (verProductsJson) {
-            this.products = JSON.parse(verProductsJson)
-        } //si el Json tenia algo lo parseo y lo almaceno en this.products. Aca no uso else porque si no hay nada en el Json, this.products seguira siendo array vacio porque asi lo inicializo en el constructor
-        if (!title || !description || !price || !thumbnail || !code || !stock) {
-            console.log("El producto no puede tener campos vacios");
-            return;
-        } else {
-            const producExist = this.products.find(product => product.code === code);// uso find porque al encontrar el primer producto con un codigo igual corta. Al ser pocos productos puede ser mas conveniente el some, pero lo hago pensando en que si agrego muchos productos, some puede encontrarlo en la primera posicion e igual seguiria hasta la ultima 
-            if (producExist) {
+        try {
+            // Validar que no haya campos vacíos
+            if (!title || !description || !price || !thumbnail || !code || !stock) {
+                console.log("El producto no puede tener campos vacíos");
+                return;
+            }
+
+            // Verificar si el producto ya existe por código
+            if (this.products.some(product => product.code === code)) {
                 console.log("Este producto ya fue cargado con anterioridad");
                 return;
-            } else {
-                ProductManager.id++;
-                const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);//esta linea y la siguiente van aca porque si las pongo al principio, cuando hay un producto con algun campo vacio se incrementa el id sin que se cree efectivamente el producto, en cambio si llego aca es porque ya paso los filtros.
-                this.products.push(newProduct); //pusheo el array con el producto agregado
-                console.log(this.products);
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products, null, 2))//reescribo el JSON con todos los productos actualizados
-                console.log(this.products);
-                console.log("¡Producto agregado con exito!");
-            };
-        };
-    };
+            }
+
+            // Crear un nuevo producto
+            ProductManager.id++;
+            const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);
+            
+            // Agregar el nuevo producto a la lista de productos
+            this.products.push(newProduct);
+
+            // Escribir la lista actualizada de productos en el archivo JSON
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+
+            console.log("¡Producto agregado con éxito!");
+        } catch (error) {
+            console.error("Error al agregar el producto:", error);
+        }
+    }
 
     async getProducts() {
         try {
-            // Verifico si el archivo existe
-            const stats = await fs.promises.stat(this.path);
-            if (stats.isFile()) { //isFile devuelve true si el archivo existe y false en caso contrario
-                // Si el archivo existe, lo leo y guardo los productos
-                const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
-                this.products = JSON.parse(verProductsJson);
-                //Imprimo todos los productos
-                for (let i = 0; i < this.products.length; i++) {
-                    console.log(this.products[i]);
-                }
-            } else {
-                console.log("No hay productos almacenados");
-            }
+            console.log(this.products);
         } catch (error) {
-            console.error("Error al intentar obtener productos:", error);
+            console.error("Error al obtener los productos:", error);
         }
     }
 
     async getProductById(id) {
         try {
-            const verProductsJson = await fs.readFile(this.path, "utf-8");
-            if(verProductsJson){
-                this.products= JSON.parse(verProductsJson)
-                const productFound = this.products.find(producto => producto.id === id);
-                if (!productFound) {
-                    console.error(`El producto con el id ${id} no fue encontrado (Error 404 - Not Found)`)
-                } else console.log(productFound);
+            const productFound = this.products.find(product => product.id === id);
+            if (!productFound) {
+                console.error(`El producto con el id ${id} no fue encontrado`);
+            } else {
+                console.log(productFound);
             }
-        }
-        catch{
-            console.error("Error inesperado");
-
+        } catch (error) {
+            console.error(`Error inesperado al obtener el producto con id ${id}`, error);
         }
     }
-
-};
-
+}
 
 const fs = require("fs");
-const path = "./products.json"
-if (!fs.existsSync(path)) {
-    const content = "[]";
-    fs.writeFile(path, content, (error) => {
-        if (error) {
-            console.error("No se pudo crear el archivo");
-        } else {
-            console.log("Archivo creado con éxito");
-        }
-    });
+const path = "./products.json";
+
+async function main() {
+    let manager = new ProductManager();
+    await manager.init();
+    await manager.getProducts();
+    await manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
+    await manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
+    await manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
+    await manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
+    await manager.getProducts();
+    await manager.getProductById(`03`);
+    await manager.getProductById(1);
 };
-let manager = new ProductManager();
-manager.getProducts();
-manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
-manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
-manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
-manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
-manager.getProducts();
-//manager.getProductById(`03`);
-//manager.getProductById(1);
+
+main(); 
