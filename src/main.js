@@ -149,6 +149,9 @@ async function main() {
     await manager.deleteProduct(1);
     await manager.getProducts();
     await manager.updateProduct(2,{title:"cafe Mutado",description:"cafe mutante"})
+    await manager.updateProduct(2,{id:"1",description:"cafe mutante"})
+    await manager.updateProduct(2,{})
+
 };
 
 main(); 
