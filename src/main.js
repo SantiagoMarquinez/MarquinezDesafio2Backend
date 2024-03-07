@@ -34,23 +34,19 @@ class ProductManager {
 
     async addProduct(title, description, price, thumbnail, code, stock) {
         try {
-            // Validar que no haya campos vacíos
+            // Valido que no haya campos vacios
             if (!title || !description || !price || !thumbnail || !code || !stock) {
                 console.log("El producto no puede tener campos vacíos");
                 return;
             }
-
-            // Verificar si el producto ya existe por código
+            // Verifico si el producto ya existe
             if (this.products.some(product => product.code === code)) {
                 console.log("Este producto ya fue cargado con anterioridad");
                 return;
             }
-
-            // Crear un nuevo producto
+            // Creo un nuevo producto y lo agrego
             ProductManager.id++;
             const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);
-            
-            // Agregar el nuevo producto a la lista de productos
             this.products.push(newProduct);
 
             // Escribir la lista actualizada de productos en el archivo JSON
@@ -82,8 +78,60 @@ class ProductManager {
             console.error(`Error inesperado al obtener el producto con id ${id}`, error);
         }
     }
+
+    async deleteProduct(id) {
+        try {
+            //busco el producto que coincida con el id y devuelvo el indice de ese producto, que es el que remuevo
+            const indexRemove = this.products.findIndex(product => product.id === id); 
+            if (indexRemove > -1) {
+                //lo remuevo de products
+                this.products.splice(indexRemove,1); 
+                //reescribo el JSON con products actualizado
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8"); 
+                console.log("Elemento eliminado")
+            } else {
+                console.log(`No hay productos con el id ${id}`);
+            }
+        } catch (error) {
+            console.error(`Error inesperado al eliminar el producto con id ${id}`, error);
+        }
+    }
+
+    async updateProduct(id, toUpdateFields) {
+        try {
+            const indexUD = this.products.findIndex(product => product.id === id);
+            if (indexUD === -1) {
+                throw new Error(`El producto con id ${id} no existe`);
+            }        
+            // Verifico si toUpdateFields no esta vacio y si el campo 'id' no esta incluido
+            if (Object.keys(toUpdateFields).length > 0 && !('id' in toUpdateFields)) {
+                // Verifico que toUpdateFields no contenga el campo id y si lo tiene lo elimino
+                const updatedFields = {...toUpdateFields};
+                if ('id' in updatedFields) {
+                    delete updatedFields.id;
+                    console.error("No está permitido modificar el ID del producto");
+                }    
+                // Actualizo los campos del producto
+                this.products[indexUD] = {...this.products[indexUD], ...updatedFields};
+                // Actualizo la lista de productos en el archivo JSON
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+                console.log("Producto actualizado correctamente");
+            } else if ('id' in toUpdateFields) {
+                // Si el campo 'id' está incluido, tiro el error
+                throw new Error("No está permitido modificar el ID del producto");
+            } else {
+                // Si toUpdateFields esta vacoo, tiro el error
+                throw new Error("No se especificaron campos para actualizar");
+            }
+        } catch (error) {
+            console.error("Error al actualizar el producto:", error);
+        }
+    }
+    
 }
 
+
+const { error } = require("console");
 const fs = require("fs");
 const path = "./products.json";
 
@@ -98,6 +146,9 @@ async function main() {
     await manager.getProducts();
     await manager.getProductById(`03`);
     await manager.getProductById(1);
+    await manager.deleteProduct(1);
+    await manager.getProducts();
+    await manager.updateProduct(2,{title:"cafe Mutado",description:"cafe mutante"})
 };
 
 main(); 
