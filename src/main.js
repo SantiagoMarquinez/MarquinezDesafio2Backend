@@ -60,7 +60,7 @@ class ProductManager {
 
     async getProducts() {
         try {
-            console.log(this.products);
+            return this.products;
         } catch (error) {
             console.error("Error al obtener los productos:", error);
         }
@@ -68,14 +68,18 @@ class ProductManager {
 
     async getProductById(id) {
         try {
+            console.log(typeof id)
+            await console.log(`todos los productos antes de filtrar ${this.products}`)
             const productFound = this.products.find(product => product.id === id);
             if (!productFound) {
                 console.error(`llegaste a getProductById - El producto con el id ${id} no fue encontrado`);
             } else {
-                console.log(productFound);
+                await console.log(`Aca deberia estar el producto que buscas ${productFound}`)
+                return productFound;
             }
         } catch (error) {
             console.error(`Error inesperado al obtener el producto con id ${id}`, error);
+            return undefined;
         }
     }
 

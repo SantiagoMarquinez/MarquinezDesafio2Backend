@@ -5,9 +5,14 @@ const path = require("path");
 const app = express();
 
 const products= new ProductManager(path.join(__dirname,"/products.json"));
+console.log(`HOLA ${path.join(__dirname,"/products.json")}`)
+
 app.get("/products", async(req,res)=>{
     try{
-
+        await products.init();
+        let prodList= await products.getProducts();
+        console.log(prodList);
+        res.send(prodList);
     }
     catch(error){
         console.error("error del servidor", error);
@@ -17,15 +22,14 @@ app.get("/products", async(req,res)=>{
 app.get("/products/:id", async(req,res)=>{// los ":" antes del id indican que es dinamico. se recibe en los params del req que hace el cliente"
     try{
         let id= parseInt(req.params.id); // uso parseInt porque todos los datos que sacamos de los params son strings
-        console.log(id);
-        res.send(`producto con id ${id}`)
+        console.log(`producto con id ${id}`)
         let prodList= await products.getProductById(id);
-        console.log(prodList)
+        console.log(`Este es el producto solicitado ${prodList}`)
         res.send(prodList);
     }
     catch(error){
         console.error("error del servidor", error);
-        res.send("Producto no encontrado")
+        res.status(404).send("Producto no encontrado");
     }
 })
 
