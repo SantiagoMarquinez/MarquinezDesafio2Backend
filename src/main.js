@@ -70,7 +70,7 @@ class ProductManager {
         try {
             const productFound = this.products.find(product => product.id === id);
             if (!productFound) {
-                console.error(`El producto con el id ${id} no fue encontrado`);
+                console.error(`llegaste a getProductById - El producto con el id ${id} no fue encontrado`);
             } else {
                 console.log(productFound);
             }
@@ -131,27 +131,29 @@ class ProductManager {
 }
 
 
-const { error } = require("console");
+
 const fs = require("fs");
 const path = "./products.json";
 
-async function main() {
-    let manager = new ProductManager();
-    await manager.init();
-    await manager.getProducts();
-    await manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
-    await manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
-    await manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
-    await manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
-    await manager.getProducts();
-    await manager.getProductById(`03`);
-    await manager.getProductById(1);
-    await manager.deleteProduct(1);
-    await manager.getProducts();
-    await manager.updateProduct(2,{title:"cafe Mutado",description:"cafe mutante"})
-    await manager.updateProduct(2,{id:"1",description:"cafe mutante"})
-    await manager.updateProduct(2,{})
+// async function main() {
+//     let manager = new ProductManager();
+//     await manager.init();
+//     await manager.getProducts();
+//     await manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
+//     await manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
+//     await manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
+//     await manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
+//     await manager.getProducts();
+//     await manager.getProductById(`03`);
+//     await manager.getProductById(1);
+//     await manager.deleteProduct(1);
+//     await manager.getProducts();
+//     await manager.updateProduct(2,{title:"cafe Mutado",description:"cafe mutante"})
+//     await manager.updateProduct(2,{id:"1",description:"cafe mutante"})
+//     await manager.updateProduct(2,{})
+//     await manager.updateProduct(2,{id:"1"})
 
-};
+// };
 
-main(); 
+// main();
+module.exports = ProductManager;
