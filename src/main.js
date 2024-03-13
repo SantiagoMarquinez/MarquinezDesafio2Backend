@@ -1,3 +1,5 @@
+const fs = require("fs");
+const path = "src/products.json";
 class Product {
     constructor(title, description, price, thumbnail, code, stock, id) {
         this.title = title;
@@ -32,31 +34,31 @@ class ProductManager {
         }
     }
 
-    async addProduct(title, description, price, thumbnail, code, stock) {
-        try {
-            // Valido que no haya campos vacios
-            if (!title || !description || !price || !thumbnail || !code || !stock) {
-                console.log("El producto no puede tener campos vacíos");
-                return;
-            }
-            // Verifico si el producto ya existe
-            if (this.products.some(product => product.code === code)) {
-                console.log("Este producto ya fue cargado con anterioridad");
-                return;
-            }
-            // Creo un nuevo producto y lo agrego
-            ProductManager.id++;
-            const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);
-            this.products.push(newProduct);
+    // async addProduct(title, description, price, thumbnail, code, stock) {
+    //     try {
+    //         // Valido que no haya campos vacios
+    //         if (!title || !description || !price || !thumbnail || !code || !stock) {
+    //             console.log("El producto no puede tener campos vacíos");
+    //             return;
+    //         }
+    //         // Verifico si el producto ya existe
+    //         if (this.products.some(product => product.code === code)) {
+    //             console.log("Este producto ya fue cargado con anterioridad");
+    //             return;
+    //         }
+    //         // Creo un nuevo producto y lo agrego
+    //         ProductManager.id++;
+    //         const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);
+    //         this.products.push(newProduct);
 
-            // Escribir la lista actualizada de productos en el archivo JSON
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+    //         // Escribir la lista actualizada de productos en el archivo JSON
+    //         await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
 
-            console.log("¡Producto agregado con éxito!");
-        } catch (error) {
-            console.error("Error al agregar el producto:", error);
-        }
-    }
+    //         console.log("¡Producto agregado con éxito!");
+    //     } catch (error) {
+    //         console.error("Error al agregar el producto:", error);
+    //     }
+    // }
 
     async getProducts() {
         try {
@@ -68,18 +70,15 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            console.log(typeof id)
-            await console.log(`todos los productos antes de filtrar ${this.products}`)
             const productFound = this.products.find(product => product.id === id);
             if (!productFound) {
-                console.error(`llegaste a getProductById - El producto con el id ${id} no fue encontrado`);
+                throw new Error(`El producto con el ID ${id} no fue encontrado`);
             } else {
                 await console.log(`Aca deberia estar el producto que buscas ${productFound}`)
                 return productFound;
             }
         } catch (error) {
-            console.error(`Error inesperado al obtener el producto con id ${id}`, error);
-            return undefined;
+            throw error;
         }
     }
 
@@ -136,28 +135,5 @@ class ProductManager {
 
 
 
-const fs = require("fs");
-const path = "./products.json";
 
-// async function main() {
-//     let manager = new ProductManager();
-//     await manager.init();
-//     await manager.getProducts();
-//     await manager.addProduct(`Mate`, `Yerba`, 3000, `thumbnail`, `03`, 10);
-//     await manager.addProduct(`Cafe`, `Cafecitooo`, 5000, `thumbnail2`, `034`, 10);
-//     await manager.addProduct(`palmitos`, undefined, 2000, `thumbnail3`, `56`, 10);
-//     await manager.addProduct(`Harina`, `harina 000`, 2000, `thumbnail3`, `000`, 10);
-//     await manager.getProducts();
-//     await manager.getProductById(`03`);
-//     await manager.getProductById(1);
-//     await manager.deleteProduct(1);
-//     await manager.getProducts();
-//     await manager.updateProduct(2,{title:"cafe Mutado",description:"cafe mutante"})
-//     await manager.updateProduct(2,{id:"1",description:"cafe mutante"})
-//     await manager.updateProduct(2,{})
-//     await manager.updateProduct(2,{id:"1"})
-
-// };
-
-// main();
 module.exports = ProductManager;

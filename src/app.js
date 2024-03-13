@@ -4,18 +4,31 @@ const express = require("express");
 const path = require("path");
 const app = express();
 
-const products= new ProductManager(path.join(__dirname,"/products.json"));
-console.log(`HOLA ${path.join(__dirname,"/products.json")}`)
+const fs = require("fs");
+console.log(`existe el archivo? ${fs.existsSync(path.join(__dirname, "src/products.json"))}`);
+
+
+const products= new ProductManager(path.join(__dirname,"src/products.json"));
+console.log(`HOLA ${path.join(__dirname,"src/products.json")}`)
 
 app.get("/products", async(req,res)=>{
     try{
         await products.init();
         let prodList= await products.getProducts();
         console.log(prodList);
-        res.send(prodList);
+        const {limit}= req.query;
+        console.log(`este es el limite ${limit}`);
+        if(!limit){
+            res.send(prodList);
+        } else if (Number.isInteger(Number(limit)) && Number(limit) > 0){
+            res.send(prodList.slice(0, limit));
+        }else{
+            res.send(`El limite (${limit}) no es valido`);
+        }
     }
     catch(error){
         console.error("error del servidor", error);
+        res.status(500).send("Error del servidor");
     }
 });
 
