@@ -20,7 +20,8 @@ app.get("/products", async(req,res)=>{
         console.log(`este es el limite ${limit}`);
         if(!limit){
             res.send(prodList);
-        } else if (Number.isInteger(Number(limit)) && Number(limit) > 0){
+        } else if (Number.isInteger(Number(limit)) && Number(limit) > 0 && Number(limit)<prodList.length){
+            console.log(`CANTIDAD DE PRODUCTOS ${prodList.length}`)
             res.send(prodList.slice(0, limit));
         }else{
             res.send(`El limite (${limit}) no es valido`);
