@@ -1,5 +1,6 @@
 const fs = require("fs");
-const path = "src/products.json";
+const path= require("path");
+
 class Product {
     constructor(title, description, price, thumbnail, code, stock, id) {
         this.title = title;
@@ -15,7 +16,7 @@ class ProductManager {
     static id = 0;
     constructor() {
         this.products = [];
-        this.path = path;
+        this.path = path.join(__dirname, "../models/products.json");
     }
 
     async init() {
