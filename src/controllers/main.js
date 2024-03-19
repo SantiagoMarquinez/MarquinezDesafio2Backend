@@ -2,7 +2,7 @@ const fs = require("fs");
 const path= require("path");
 
 class Product {
-    constructor(title, description, price, thumbnail, code, stock, id) {
+    constructor(title, description, price, thumbnail, code, stock, id, category) {
         this.title = title;
         this.description = description;
         this.price = price;
@@ -10,6 +10,8 @@ class Product {
         this.code = code;
         this.stock = stock;
         this.id = id;
+        this.category = category;
+        this.status=true;
     }
 }
 class ProductManager {
@@ -35,31 +37,33 @@ class ProductManager {
         }
     }
 
-    // async addProduct(title, description, price, thumbnail, code, stock) {
-    //     try {
-    //         // Valido que no haya campos vacios
-    //         if (!title || !description || !price || !thumbnail || !code || !stock) {
-    //             console.log("El producto no puede tener campos vacíos");
-    //             return;
-    //         }
-    //         // Verifico si el producto ya existe
-    //         if (this.products.some(product => product.code === code)) {
-    //             console.log("Este producto ya fue cargado con anterioridad");
-    //             return;
-    //         }
-    //         // Creo un nuevo producto y lo agrego
-    //         ProductManager.id++;
-    //         const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id);
-    //         this.products.push(newProduct);
+    async addProduct(product) {
+        try {
+            const {title, description, price, thumbnail, code, stock, category,status } = product;
+            
+            // Valido que no haya campos vacios
+            if (!title || !description || !price || !thumbnail || !code || !stock || !category || status===undefined) {
+                console.log("El producto no puede tener campos vacíos");
+                return;
+            }
+            // Verifico si el producto ya existe
+            if (this.products.some(product => product.code === code)) {
+                console.log("Este producto ya fue cargado con anterioridad");
+                return;
+            }
+            // Creo un nuevo producto y lo agrego
+            ProductManager.id++;
+            const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id, category, status);
+            this.products.push(newProduct);
 
-    //         // Escribir la lista actualizada de productos en el archivo JSON
-    //         await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+            // Escribir la lista actualizada de productos en el archivo JSON
+            await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
 
-    //         console.log("¡Producto agregado con éxito!");
-    //     } catch (error) {
-    //         console.error("Error al agregar el producto:", error);
-    //     }
-    // }
+            console.log("¡Producto agregado con éxito!");
+        } catch (error) {
+            console.error("Error al agregar el producto:", error);
+        }
+    }
 
     async getProducts() {
         try {
