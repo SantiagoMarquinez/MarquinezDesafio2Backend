@@ -1,5 +1,5 @@
 const fs = require("fs");
-const path= require("path");
+const path = require("path");
 
 class Product {
     constructor(title, description, price, thumbnail, code, stock, id, category) {
@@ -11,7 +11,7 @@ class Product {
         this.stock = stock;
         this.id = id;
         this.category = category;
-        this.status=true;
+        this.status = true;
     }
 }
 class ProductManager {
@@ -39,10 +39,10 @@ class ProductManager {
 
     async addProduct(product) {
         try {
-            const {title, description, price, thumbnail, code, stock, category,status } = product;
-            
+            const { title, description, price, thumbnail, code, stock, category, status } = product;
+
             // Valido que no haya campos vacios
-            if (!title || !description || !price || !thumbnail || !code || !stock || !category || status===undefined) {
+            if (!title || !description || !price || !thumbnail || !code || !stock || !category || status === undefined) {
                 console.log("El producto no puede tener campos vacíos");
                 return;
             }
@@ -90,12 +90,12 @@ class ProductManager {
     async deleteProduct(id) {
         try {
             //busco el producto que coincida con el id y devuelvo el indice de ese producto, que es el que remuevo
-            const indexRemove = this.products.findIndex(product => product.id === id); 
+            const indexRemove = this.products.findIndex(product => product.id === id);
             if (indexRemove > -1) {
                 //lo remuevo de products
-                this.products.splice(indexRemove,1); 
+                this.products.splice(indexRemove, 1);
                 //reescribo el JSON con products actualizado
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8"); 
+                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
                 console.log("Elemento eliminado")
             } else {
                 console.log(`No hay productos con el id ${id}`);
@@ -107,20 +107,25 @@ class ProductManager {
 
     async updateProduct(id, toUpdateFields) {
         try {
+            console.log(`este es el id que recibo de LA RUTA PUT ${id}`)
+            console.log(`campos a actualizar recibidos de la ruta PUT: ${toUpdateFields}`)
+            console.log(`LISTA DE PRODUCTOS${this.products}`);
             const indexUD = this.products.findIndex(product => product.id === id);
+            console.log(`Index del producto con ID ${id}: ${indexUD}`); // Agregar un console.log para ver el índice del producto encontrado
+            console.log(`Producto encontrado: ${JSON.stringify(this.products[indexUD])}`); // Agregar un console.log para ver el producto encontrado
             if (indexUD === -1) {
                 throw new Error(`El producto con id ${id} no existe`);
-            }        
+            }
             // Verifico si toUpdateFields no esta vacio y si el campo 'id' no esta incluido
             if (Object.keys(toUpdateFields).length > 0 && !('id' in toUpdateFields)) {
                 // Verifico que toUpdateFields no contenga el campo id y si lo tiene lo elimino
-                const updatedFields = {...toUpdateFields};
+                const updatedFields = { ...toUpdateFields };
                 if ('id' in updatedFields) {
                     delete updatedFields.id;
                     console.error("No está permitido modificar el ID del producto");
-                }    
+                }
                 // Actualizo los campos del producto
-                this.products[indexUD] = {...this.products[indexUD], ...updatedFields};
+                this.products[indexUD] = { ...this.products[indexUD], ...updatedFields };
                 // Actualizo la lista de productos en el archivo JSON
                 await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
                 console.log("Producto actualizado correctamente");
@@ -135,7 +140,7 @@ class ProductManager {
             console.error("Error al actualizar el producto:", error);
         }
     }
-    
+
 }
 
 

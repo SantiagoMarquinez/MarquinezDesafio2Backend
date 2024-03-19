@@ -52,4 +52,27 @@ router.post("/products", async (req, res) => {
     }
 });
 
+router.put("/products", async (req, res) => {
+    try { 
+        let toUpdateFields = req.body[0];
+        console.log(toUpdateFields)
+        if (!toUpdateFields || !toUpdateFields.id) {
+            throw new Error("El objeto de actualización no tiene un campo 'id' válido");
+        }
+        
+        let id = toUpdateFields.id;
+        console.log(`este es el id que viene de postman ${id}`)
+        delete toUpdateFields.id;
+        
+        await products.updateProduct(id, toUpdateFields);
+        
+        res.status(200).send("Producto actualizado correctamente");
+    }
+    catch(error) { 
+        console.error("Error al actualizar el producto:", error); 
+        res.status(500).send("Error del servidor - el producto no fue actualizado");
+    }
+});
+
+
 module.exports = router;
