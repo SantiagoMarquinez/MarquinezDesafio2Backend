@@ -6,7 +6,7 @@ class Product {
         this.title = title;
         this.description = description;
         this.price = price;
-        this.thumbnail = thumbnail;
+        this.thumbnail = thumbnail || [];
         this.code = code;
         this.stock = stock;
         this.id = id;
@@ -15,30 +15,51 @@ class Product {
     }
 }
 class ProductManager {
-    static id = 0;
     constructor() {
         this.products = [];
-        this.path = path.join(__dirname, "../models/products.json");
+        this.path = "./src/models/products.json";
+        this.id = 0;
     }
 
-    async init() {
+    // async init() {
+    //     try {
+    //         // Verificar si el archivo JSON existe
+    //         if (fs.existsSync(this.path)) {
+    //             // Leer productos del archivo JSON si existe
+    //             const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
+    //             this.products = JSON.parse(verProductsJson);
+    //         } else {
+    //             // Si el archivo no existe, crearlo con un array vacío
+    //             await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
+    //         }
+    //     } catch (error) {
+    //         console.error("Error al inicializar ProductManager:", error);
+    //     }
+    // }
+    // async leerArchivo() {
+    //     try {
+    //         const leer = await fs.readFile(this.path, "utf-8");
+    //         const products = JSON.parse(leer);
+    //         return products;
+    //     } catch (error) {
+    //         console.log("Error en el archivo", error);
+    //         throw error;
+    //     }
+    // }
+
+    async readProducts() {
         try {
-            // Verificar si el archivo JSON existe
-            if (fs.existsSync(this.path)) {
-                // Leer productos del archivo JSON si existe
-                const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
-                this.products = JSON.parse(verProductsJson);
-            } else {
-                // Si el archivo no existe, crearlo con un array vacío
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
-            }
+            const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
+            this.products = JSON.parse(verProductsJson);
         } catch (error) {
-            console.error("Error al inicializar ProductManager:", error);
+            console.error("Error al leer los productos desde el archivo JSON:", error);
+            throw error;
         }
     }
-
+    
     async addProduct(product) {
         try {
+            await this.readProducts();
             const { title, description, price, thumbnail, code, stock, category, status } = product;
 
             // Valido que no haya campos vacios
@@ -52,8 +73,8 @@ class ProductManager {
                 return;
             }
             // Creo un nuevo producto y lo agrego
-            ProductManager.id++;
-            const newProduct = new Product(title, description, price, thumbnail, code, stock, ProductManager.id, category, status);
+            this.id++;
+            const newProduct = new Product(title, description, price, thumbnail, code, stock, this.id, category, status);
             this.products.push(newProduct);
 
             // Escribir la lista actualizada de productos en el archivo JSON
@@ -67,6 +88,7 @@ class ProductManager {
 
     async getProducts() {
         try {
+            await this.readProducts();
             return this.products;
         } catch (error) {
             console.error("Error al obtener los productos:", error);
@@ -75,6 +97,7 @@ class ProductManager {
 
     async getProductById(id) {
         try {
+            await this.readProducts();
             const productFound = this.products.find(product => product.id === id);
             if (!productFound) {
                 throw new Error(`El producto con el ID ${id} no fue encontrado`);
@@ -89,8 +112,13 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
+            await this.readProducts();
             //busco el producto que coincida con el id y devuelvo el indice de ese producto, que es el que remuevo
+            console.log(`ID RECIBIDO DESDE ROUTERS: ${id}`)
+            console.log(this.path)
+            console.log(this.products)
             const indexRemove = this.products.findIndex(product => product.id === id);
+            console.log(`indice a remover: ${indexRemove}`)
             if (indexRemove > -1) {
                 //lo remuevo de products
                 this.products.splice(indexRemove, 1);
@@ -107,12 +135,9 @@ class ProductManager {
 
     async updateProduct(id, toUpdateFields) {
         try {
-            console.log(`este es el id que recibo de LA RUTA PUT ${id}`)
-            console.log(`campos a actualizar recibidos de la ruta PUT: ${toUpdateFields}`)
-            console.log(`LISTA DE PRODUCTOS${this.products}`);
+            await this.readProducts();
+
             const indexUD = this.products.findIndex(product => product.id === id);
-            console.log(`Index del producto con ID ${id}: ${indexUD}`); // Agregar un console.log para ver el índice del producto encontrado
-            console.log(`Producto encontrado: ${JSON.stringify(this.products[indexUD])}`); // Agregar un console.log para ver el producto encontrado
             if (indexUD === -1) {
                 throw new Error(`El producto con id ${id} no existe`);
             }
@@ -133,7 +158,7 @@ class ProductManager {
                 // Si el campo 'id' está incluido, tiro el error
                 throw new Error("No está permitido modificar el ID del producto");
             } else {
-                // Si toUpdateFields esta vacoo, tiro el error
+                // Si toUpdateFields esta vacio, tiro el error
                 throw new Error("No se especificaron campos para actualizar");
             }
         } catch (error) {
@@ -142,6 +167,7 @@ class ProductManager {
     }
 
 }
+
 
 
 

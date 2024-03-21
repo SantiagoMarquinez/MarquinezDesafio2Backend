@@ -9,8 +9,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))// extended true indica que trabajamos con datos complejos  (no solo strings)
 
 // RUTAS / esto tiene que estar en la pre-entrega 1
-app.use("/", productsRouter);
-//app.use("/api/carts", cartsRouter); linea 13 a la que hago referencia
+app.use("/api", productsRouter);
+//app.use("/api", cartsRouter); linea 13 a la que hago referencia
 
 
 

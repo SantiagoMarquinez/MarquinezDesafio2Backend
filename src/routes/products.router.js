@@ -8,7 +8,7 @@ const products = new ProductManager();
 
 router.get("/products", async (req, res) => {
     try {
-        await products.init();
+
         let prodList = await products.getProducts();
         console.log(prodList);
         const { limit } = req.query;
@@ -57,7 +57,7 @@ router.put("/products", async (req, res) => {
         let toUpdateFields = req.body[0];
         console.log(toUpdateFields)
         if (!toUpdateFields || !toUpdateFields.id) {
-            throw new Error("El objeto de actualización no tiene un campo 'id' válido");
+            throw new Error("El producto no tiene un campo 'id' válido");
         }
         
         let id = toUpdateFields.id;
@@ -73,6 +73,17 @@ router.put("/products", async (req, res) => {
         res.status(500).send("Error del servidor - el producto no fue actualizado");
     }
 });
+
+router.delete ("/products/:pid", async (req, res)=>{
+    try {
+        let id = parseInt(req.params.pid);
+        await products.deleteProduct(id);
+    }
+    catch {
+        console.error(`No fue posible eliminar el producto`,error)
+        res.status(500).send("Error del servidor - el producto no fue eliminado");
+    }
+})
 
 
 module.exports = router;
