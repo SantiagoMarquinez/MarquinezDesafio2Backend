@@ -21,32 +21,6 @@ class ProductManager {
         this.id = 0;
     }
 
-    // async init() {
-    //     try {
-    //         // Verificar si el archivo JSON existe
-    //         if (fs.existsSync(this.path)) {
-    //             // Leer productos del archivo JSON si existe
-    //             const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
-    //             this.products = JSON.parse(verProductsJson);
-    //         } else {
-    //             // Si el archivo no existe, crearlo con un array vacío
-    //             await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
-    //         }
-    //     } catch (error) {
-    //         console.error("Error al inicializar ProductManager:", error);
-    //     }
-    // }
-    // async leerArchivo() {
-    //     try {
-    //         const leer = await fs.readFile(this.path, "utf-8");
-    //         const products = JSON.parse(leer);
-    //         return products;
-    //     } catch (error) {
-    //         console.log("Error en el archivo", error);
-    //         throw error;
-    //     }
-    // }
-
     async readProducts() {
         try {
             const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
@@ -167,9 +141,6 @@ class ProductManager {
     }
 
 }
-
-
-
 
 
 module.exports = ProductManager;

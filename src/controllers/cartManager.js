@@ -5,10 +5,10 @@ class CartManager {
         this.path = path;
         this.cId = 0;//id del ultimo carrito
 
-        this.cargarCarritos();
+        this.loadCarts();
     }
 
-    async cargarCarritos(){
+    async loadCarts(){//carga los carritos
         try {
             const cartsInJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
             this.carts = cartsInJson;
@@ -29,20 +29,22 @@ class CartManager {
         }
     }
 
-    async createNewCart(){
+    async createNewCart() {
         try {
+            this.cId++; // Incrementa el id del carrito antes de usarlo
             const newCart = {
-                id: this.cId++,
+                id: this.cId,
                 products: []
-            }
+            };
             this.carts.push(newCart);
             await this.saveCarts();
-            return newCart
+            return newCart;
         } catch (error) {
             console.error("Error - no se pudo crear el carrito", error);
-            
         }
     }
+    
+    
 
     async getCartById (cartId){
         try {
