@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 
-const ProductManager = require("../controllers/main");// aca estoy "importando"  main.js
+const ProductManager = require("../controllers/productManager");// aca estoy "importando"  producManager.js
 const products = new ProductManager();
 
 
