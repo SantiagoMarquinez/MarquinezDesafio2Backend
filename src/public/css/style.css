@@ -1,0 +1,73 @@
+body{
+    background-color: #0a0909;;
+}
+h1,
+h2 {
+    color: #d1cfcf;
+    text-align: center;
+}
+
+#productsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+}
+
+
+/* Estilos generales para las tarjetas */
+.card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    margin: 10px;
+    width: 200px;
+    height: 200px;
+    background-color: #d1cfcf;
+}
+
+/* Estilos para el título del producto */
+.card .title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+/* Estilos para el precio del producto */
+.card .price {
+    font-size: 16px;
+    color: #666;
+}
+
+/* Estilos para el botón de eliminar */
+.card .delete-button {
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 3px;
+    padding: 5px 10px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+/* Estilos para el hover del botón de eliminar*/
+.card .delete-button:hover {
+    background-color: #c0392b;
+}
+
+/*Estilos del formulario*/
+
+.formContainer{
+    display: flex;
+    justify-content: center;
+}
+
+.formulario{
+    display: flex;
+    align-content: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 400px;
+}

@@ -14,10 +14,12 @@ const renderProducts = (products) => {
     products.forEach(element => {
         const card = document.createElement("div");
         card.innerHTML = `
+                    <div class="card">
                         <p>ID:${element.id} </p>
                         <p>Titulo: ${element.title}</p>
                         <p>Precio: ${element.price}</p>
                         <button>Eliminar</button>
+                    </div>
                         `
         productsContainer.appendChild(card);
 
