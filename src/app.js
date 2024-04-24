@@ -1,18 +1,20 @@
 const express = require("express");
 const app = express();
 const PUERTO = 8080;
+const expresshandlebars = require("express-handlebars");
+const socket = require("socket.io");
+require("./database.js"); // esto hace la conexión con database.js y data base.js hace la conexión con mongodb
+
 const productsRouter= require("./routes/products.router");
 const cartsRouter= require("./routes/carts.router") ;
 const viewsRouter = require("./routes/views.router.js");
-const expresshandlebars = require("express-handlebars");
-const socket = require("socket.io");
 
-//con estas dos lineas el servidor express puede interpretar mensajes de tipo json en formato urlencoded que recibira de postman
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));// extended true indica que trabajamos con datos complejos  (no solo strings)
 
 //Middleware
 app.use(express.static("./src/public"));
+//con estas dos lineas el servidor express puede interpretar mensajes de tipo json en formato urlencoded que recibira de postman
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));// extended true indica que trabajamos con datos complejos  (no solo strings)
 
 //configuro handlebars
 app.engine("handlebars", expresshandlebars.engine());

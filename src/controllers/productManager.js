@@ -1,69 +1,76 @@
-const fs = require("fs");
-const path = require("path");
+const ProductModel = require("../models/product.model")
+// const fs = require("fs");
+// const path = require("path");
 
-class Product {
-    constructor(title, description, price, thumbnail, code, stock, id, category) {
-        this.title = title;
-        this.description = description;
-        this.price = price;
-        this.thumbnail = thumbnail || [];
-        this.code = code;
-        this.stock = stock;
-        this.id = id;
-        this.category = category;
-        this.status = true;
-    }
-}
+// class Product {
+//     constructor(title, description, price, thumbnail, code, stock, id, category) {
+//         this.title = title;
+//         this.description = description;
+//         this.price = price;
+//         this.thumbnail = thumbnail || [];
+//         this.code = code;
+//         this.stock = stock;
+//         this.id = id;
+//         this.category = category;
+//         this.status = true;
+//     }
+// }
 class ProductManager {
-    constructor() {
-        this.products = [];
-        this.path = "./src/models/products.json";
-        this.id = 0;
-    }
+    // constructor() {
+    //     this.products = [];
+    //     this.path = "./src/models/products.json";
+    //     this.id = 0;
+    // }
 
-    async readProducts() {
-        try {
-            const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
-            this.products = JSON.parse(verProductsJson);
-        } catch (error) {
-            console.error("Error al leer los productos desde el archivo JSON:", error);
-            throw error;
-        }
-    }
-    
-    async addProduct(product) {
-        try {
-            await this.readProducts();
-            const { title, description, price, thumbnail, code, stock, category, status } = product;
+    // async readProducts() {
+    //     try {
+    //         const verProductsJson = await fs.promises.readFile(this.path, "utf-8");
+    //         this.products = JSON.parse(verProductsJson);
+    //     } catch (error) {
+    //         console.error("Error al leer los productos desde el archivo JSON:", error);
+    //         throw error;
+    //     }
+    // }
 
+    async addProduct({ title, description, price, thumbnails, code, stock, category }) {
+        try {
+            const objeto = { title, description, price, thumbnails, code, stock, category };
+            console.log(objeto)
             // Valido que no haya campos vacios
-            if (!title || !description || !price || !thumbnail || !code || !stock || !category || status === undefined) {
+            if (!title || !description || !price || !thumbnails || !code || !stock || !category) {
                 console.log("El producto no puede tener campos vacíos");
                 return;
             }
             // Verifico si el producto ya existe
-            if (this.products.some(product => product.code === code)) {
-                console.log("Este producto ya fue cargado con anterioridad");
+            const productExists = await ProductModel.findOne({ code: code });
+            if (productExists) {
+                console.log("Ya existe un producto con ese codigo");
                 return;
             }
             // Creo un nuevo producto y lo agrego
-            this.id++;
-            const newProduct = new Product(title, description, price, thumbnail, code, stock, this.id, category, status);
-            this.products.push(newProduct);
+            const newProduct = new ProductModel({
+                title,
+                description,
+                price,
+                thumbnails: thumbnails || [],
+                code,
+                stock,
+                category,
+                status: true,
 
-            // Escribir la lista actualizada de productos en el archivo JSON
-            await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
-
+            });
+            await newProduct.save();
             console.log("¡Producto agregado con éxito!");
         } catch (error) {
             console.error("Error al agregar el producto:", error);
+            throw error;
         }
     }
 
     async getProducts() {
         try {
-            await this.readProducts();
-            return this.products;
+            const products = await ProductModel.find().lean();
+            return products;
         } catch (error) {
             console.error("Error al obtener los productos:", error);
         }
@@ -71,12 +78,11 @@ class ProductManager {
 
     async getProductById(id) {
         try {
-            await this.readProducts();
-            const productFound = this.products.find(product => product.id === id);
+            const productFound = await ProductModel.findById(id);
             if (!productFound) {
                 throw new Error(`El producto con el ID ${id} no fue encontrado`);
             } else {
-                await console.log(`Aca deberia estar el producto que buscas ${productFound}`)
+                await console.log(`Este es el producto solicitado:  ${productFound}`)
                 return productFound;
             }
         } catch (error) {
@@ -86,57 +92,32 @@ class ProductManager {
 
     async deleteProduct(id) {
         try {
-            await this.readProducts();
-            //busco el producto que coincida con el id y devuelvo el indice de ese producto, que es el que remuevo
-            console.log(`ID RECIBIDO DESDE ROUTERS: ${id}`)
-            console.log(this.path)
-            console.log(this.products)
-            const indexRemove = this.products.findIndex(product => product.id === id);
-            console.log(`indice a remover: ${indexRemove}`)
-            if (indexRemove > -1) {
-                //lo remuevo de products
-                this.products.splice(indexRemove, 1);
-                //reescribo el JSON con products actualizado
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
-                console.log("Elemento eliminado")
-            } else {
+            const deleteProduct = await ProductModel.findByIdAndDelete(id);
+            
+            if (!deleteProduct) {
                 console.log(`No hay productos con el id ${id}`);
+                return null;
             }
+            console.log(`Se elimino correctamente el producto con id ${id}`)
         } catch (error) {
             console.error(`Error inesperado al eliminar el producto con id ${id}`, error);
         }
     }
 
-    async updateProduct(id, toUpdateFields) {
+    async updateProduct(id, updatedProduct) {
         try {
-            await this.readProducts();
+            const toUpdateProduct = await ProductModel.findByIdAndUpdate(id, updatedProduct)
 
-            const indexUD = this.products.findIndex(product => product.id === id);
-            if (indexUD === -1) {
+            if (!toUpdateProduct) {
                 throw new Error(`El producto con id ${id} no existe`);
             }
-            // Verifico si toUpdateFields no esta vacio y si el campo 'id' no esta incluido
-            if (Object.keys(toUpdateFields).length > 0 && !('id' in toUpdateFields)) {
-                // Verifico que toUpdateFields no contenga el campo id y si lo tiene lo elimino
-                const updatedFields = { ...toUpdateFields };
-                if ('id' in updatedFields) {
-                    delete updatedFields.id;
-                    console.error("No está permitido modificar el ID del producto");
-                }
-                // Actualizo los campos del producto
-                this.products[indexUD] = { ...this.products[indexUD], ...updatedFields };
-                // Actualizo la lista de productos en el archivo JSON
-                await fs.promises.writeFile(this.path, JSON.stringify(this.products), "utf-8");
-                console.log("Producto actualizado correctamente");
-            } else if ('id' in toUpdateFields) {
-                // Si el campo 'id' está incluido, tiro el error
-                throw new Error("No está permitido modificar el ID del producto");
-            } else {
-                // Si toUpdateFields esta vacio, tiro el error
-                throw new Error("No se especificaron campos para actualizar");
-            }
+
+            console.log("Producto actualizado");
+            return toUpdateProduct;
+
         } catch (error) {
             console.error("Error al actualizar el producto:", error);
+            throw error;
         }
     }
 
