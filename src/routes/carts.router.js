@@ -1,9 +1,9 @@
 const express = require("express");
 const router = express.Router(); 
-const CartManager = require("../controllers/cartManager.js");
-const cartManager = new CartManager("./src/models/carts.json");
+const CartManager = require("../controllers/cartManager");
+const cartManager = new CartManager(); //"./src/models/carts.json"
 
-router.post ("/carts", async (req, res)=>{//crea un carrito
+router.post ("/", async (req, res)=>{//crea un carrito
     try {
         const newCart = await cartManager.createNewCart();
         res.json(newCart)
@@ -11,12 +11,25 @@ router.post ("/carts", async (req, res)=>{//crea un carrito
         res.status(500).json({
             error: "Error interno del servidor"
         });
+        console.error("Error al crear el carrito");
     }
-})
+});
+
+
+//muestro todos los carritos
+router.get("/", async (req,res)=>{
+    try{
+        const carts = await cartManager.getCarts();
+        res.status(200).send(carts);
+    }catch(error){
+        console.error(error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
 
 //muestra los productos de un carrito determinado por id
-router.get ("/carts/:cid", async(req, res)=>{
-    const cartId = parseInt(req.params.cid);
+router.get ("/:cid", async(req, res)=>{
+    const cartId = req.params.cid;
     try {
         const cart = await cartManager.getCartById (cartId);
         res.json(cart.products);
@@ -24,14 +37,15 @@ router.get ("/carts/:cid", async(req, res)=>{
         res.status(500).json({
             error: "Error interno del servidor"
         });
+        console.error(`Error - No se pudo obtener el carrito con id ${cartId}`);
     }
 })
 
-router.post("/carts/:cid/product/:pid", async (req, res) => {
-    const cartId = parseInt(req.params.cid);
-    console.log(cartId)
+
+//agrego un producto a un carrito con un id determinado
+router.post("/:cid/product/:pid", async (req, res) => {
+    const cartId = req.params.cid;
     const productId = req.params.pid;
-    console.log(productId) // No es necesario convertir a número
     const quantity = req.body.quantity || 1; 
 
     try {
@@ -41,11 +55,9 @@ router.post("/carts/:cid/product/:pid", async (req, res) => {
         res.status(500).json({
             error: "Error interno del servidor"
         });
+        console.error("Error - El producto no fue agregado al carrito", error);
     }
 });
-
-
-
 
 
 module.exports = router; 

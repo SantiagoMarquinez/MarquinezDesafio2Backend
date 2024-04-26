@@ -1,8 +1,8 @@
-    <h1>HOME</h1>
+    <h1>Home</h1>
 
-    <div>
+    <div id="productsContainer">
         {{#each products}}
-            <div>
+            <div class="card">
                 <p>{{this.title}}</p>
                 <p>{{this.description}}</p>
                 <p>{{this.price}}</p>
@@ -14,3 +14,7 @@
             </div>
         {{/each}}
     </div>
+
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="js/main.js"></script>

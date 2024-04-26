@@ -5,8 +5,8 @@ const expresshandlebars = require("express-handlebars");
 const socket = require("socket.io");
 require("./database.js"); // esto hace la conexión con database.js y data base.js hace la conexión con mongodb
 
-const productsRouter= require("./routes/products.router");
-const cartsRouter= require("./routes/carts.router") ;
+const productsRouter= require("./routes/products.router.js");
+const cartsRouter= require("./routes/carts.router.js") ;
 const viewsRouter = require("./routes/views.router.js");
 
 
@@ -22,8 +22,8 @@ app.set("view engine", "handlebars");
 app.set ("views", "./src/views"); // revisar que este bien la ruta!!!
 
 // RUTAS 
-app.use("/api", productsRouter);
-app.use("/api", cartsRouter);
+app.use("/api/products", productsRouter);
+app.use("/api/carts", cartsRouter);
 app.use("/", viewsRouter); 
 
 
@@ -57,3 +57,4 @@ io.on("connection", async (socket) => {
     })
 
 })
+

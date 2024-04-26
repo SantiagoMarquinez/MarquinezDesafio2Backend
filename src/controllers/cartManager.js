@@ -1,80 +1,64 @@
-const fs = require("fs").promises;
+const CartModel = require("../models/cart.model.js")
 class CartManager {
-    constructor(path) {
-        this.carts = [];
-        this.path = path;
-        this.cId = 0;//id del ultimo carrito
-
-        this.loadCarts();
-    }
-
-    async loadCarts(){//carga los carritos
-        try {
-            const cartsInJson = JSON.parse(await fs.readFile(this.path, "utf-8"));
-            this.carts = cartsInJson;
-            if(this.carts.length>0){
-                this.cId = Math.max(...this.carts.map(cart=>cart.id));//encuentra el id mas alto entre todos los carritos que hay almacenados, para que cuando cargue un nuevo carrito ya este almacenado en this.cId, el id del ultimo carrito
-                }
-        } catch (error) {
-            console.error("Error - no se cargaron los carritos", error);
-            await this.saveCarts(); // si no existe el  archivo lo creo
-        }
-    }
-    async saveCarts(){
-        try {
-            await fs.writeFile(this.path, JSON.stringify(this.carts, null, 2));
-
-        } catch (error) {
-            console.error("Error - no se guardaron los carritos", error);
-        }
-    }
 
     async createNewCart() {
         try {
-            this.cId++; // Incrementa el id del carrito antes de usarlo
-            const newCart = {
-                id: this.cId,
-                products: []
-            };
-            this.carts.push(newCart);
-            await this.saveCarts();
+            const newCart = new CartModel({ products: [] });
+            await newCart.save();
             return newCart;
         } catch (error) {
-            console.error("Error - no se pudo crear el carrito", error);
-        }
-    }
-    
-    
-
-    async getCartById (cartId){
-        try {
-            const cart = this.carts.find(ca=> ca.id === cartId);
-            if (!cart){
-                console.log(`No existe un carrito con id ${cartId}`)
-                return;
-            }
-            return cart;
-        } catch (error) {
-            console.log("Error en el proceso de obtención del carrito", error);
-            
+            console.error("Algo fallo. No se pudo crear el carrito", error);
+            throw error;
         }
     }
 
-    async addProductToCart (cartId, productId, quantity = 1){ //quantity = 1 hace que si no recibimos una cantidad la misma sea 1 por defecto (si no nos pasan cantidad solo se agrega uno)
+
+
+    async addProductToCart(cartId, productId, quantity = 1) {
         try {
             const cart = await this.getCartById(cartId);
-            const product = cart.products.find( p=> p.product === productId);
-            if(product){
-                product.quantity += quantity
-            } else{
-                cart.products.push ({product: productId, quantity})
+            const product = cart.products.find(p => p.product.toString() === productId);
+
+            if (product) {
+                product.quantity += quantity;
+            } else {
+                cart.products.push({ product: productId, quantity });
             }
-            await this.saveCarts();
+
+            cart.markModified("products");
+            await cart.save();
             return cart;
         } catch (error) {
             console.error("Error al agregar el producto", error);
+            throw error;
         }
     }
+
+
+    async getCarts() {
+        try {
+            const carts = await CartModel.find();
+            return carts
+        } catch (error) {
+            console.error("Error del servidor al obtener los carritos");
+            throw error;
+        }
+    };
+    async getCartById(cartId) {
+        try {
+            const cart = await CartModel.findById(cartId);
+            console.log("Carrito obtenido de la Base de Datos:", cart);
+            if (!cart) {
+                console.log(`No se encontró el carrito con id ${cartId}`);
+                return null;
+            }
+            return cart;
+        } catch (error) {
+            console.error("Error del servidor - no se pudo obtener el carrito especificado");
+            throw error;
+        }
+    }
+
 }
 
 module.exports = CartManager;

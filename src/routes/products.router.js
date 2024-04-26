@@ -6,7 +6,7 @@ const ProductManager = require("../controllers/productManager");// aca estoy "im
 const products = new ProductManager();
 
 //muestro todos los productos->
-router.get("/products", async (req, res) => {
+router.get("/", async (req, res) => {
     try {
         const limit = req.query.limit;
         const prodList = await products.getProducts();
@@ -24,7 +24,7 @@ router.get("/products", async (req, res) => {
 });
 
 //muestro producto por id->
-router.get("/products/:id", async (req, res) => {// los ":" antes del id indican que es dinamico. se recibe en los params del req que hace el cliente"
+router.get("/:id", async (req, res) => {// los ":" antes del id indican que es dinamico. se recibe en los params del req que hace el cliente"
     let id = req.params.id;
     try {
         const product = await products.getProductById(id);
@@ -42,7 +42,7 @@ router.get("/products/:id", async (req, res) => {// los ":" antes del id indican
 });
 
 //agrego un producto->
-router.post("/products", async (req, res) => {
+router.post("/", async (req, res) => {
     let productToAdd = req.body;
     try { 
         await products.addProduct(productToAdd);
@@ -56,7 +56,7 @@ router.post("/products", async (req, res) => {
 
 
 //actualizo un producto->
-router.put("/products/:id", async (req, res) => {
+router.put("/:id", async (req, res) => {
     const id = req.params.id;
     const updatedProduct = req.body;
     console.log(`Este producto es el actualizado: ${updatedProduct}`)
@@ -73,7 +73,7 @@ router.put("/products/:id", async (req, res) => {
 });
 
 //borro un producto->
-router.delete ("/products/:pid", async (req, res)=>{
+router.delete ("/:pid", async (req, res)=>{
     const id = req.params.pid;
     try {
         await products.deleteProduct(id);

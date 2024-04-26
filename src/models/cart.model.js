@@ -5,6 +5,7 @@ const cartSchema = new mongoose.Schema({
         {
             product: {
                 type: mongoose.Schema.Types.ObjectId, //guardamos solo el id del producto, porque asi lo decia la consigna desde la primera pre-entrega / en esta linea estamos extrayendo el id de otra colección 
+                ref: "Product",
                 required: true
             },
             quantity: {
