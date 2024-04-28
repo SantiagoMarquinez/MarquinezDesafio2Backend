@@ -7,7 +7,7 @@ class CartManager {
             await newCart.save();
             return newCart;
         } catch (error) {
-            console.error("Algo fallo. No se pudo crear el carrito", error);
+            console.error("Error al crear el carrito:", error);
             throw error;
         }
     }
@@ -47,7 +47,7 @@ class CartManager {
     async getCartById(cartId) {
         try {
             const cart = await CartModel.findById(cartId);
-            console.log("Carrito obtenido de la Base de Datos:", cart);
+
             if (!cart) {
                 console.log(`No se encontró el carrito con id ${cartId}`);
                 return null;
@@ -59,6 +59,22 @@ class CartManager {
         }
     }
 
+    async deleteCartById(cartId) {
+        try {
+            const cart = await CartModel.findByIdAndDelete(cartId);
+            if (!cart) {
+                console.log(`Carrito ${cartId} inexistente. Verifique el ID`);
+                return { success: false, message: `Carrito ${cartId} inexistente. Verifique el ID` };
+            } else {
+                console.log(`El carrito ${cartId} fue eliminado con éxito`);
+                return { success: true, message: `El carrito ${cartId} fue eliminado con éxito` };
+            }
+        } catch (error) {
+            console.error("Error del servidor", error);
+            throw error;
+        }
+    }
+    
 }
 
 module.exports = CartManager;

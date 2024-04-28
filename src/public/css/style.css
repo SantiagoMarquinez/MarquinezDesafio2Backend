@@ -14,6 +14,10 @@ h2 {
 }
 
 
+#messagesLogs{
+    color:#c0392b
+}
+
 /* Estilos generales para las tarjetas */
 .card {
     display: flex;
@@ -70,4 +74,16 @@ h2 {
     flex-direction: column;
     flex-wrap: wrap;
     width: 400px;
+}
+
+
+/*estilos de chat*/
+
+.messageContainer{
+    max-height: 300px; /* Establece la altura máxima */
+    max-width: 300px;
+    overflow-y: auto; /* Habilita el desplazamiento vertical */
+    border: 1px solid #ccc; /* Borde para visualización */
+    padding: 10px; /* Espaciado interno */
+
 }

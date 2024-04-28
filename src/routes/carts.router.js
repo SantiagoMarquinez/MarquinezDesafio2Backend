@@ -60,4 +60,22 @@ router.post("/:cid/product/:pid", async (req, res) => {
 });
 
 
+router.delete("/:cid", async (req, res) => {
+    try {
+        const cartId = req.params.cid;
+        const result = await cartManager.deleteCartById(cartId);
+        
+        if (result.success) {
+            res.status(200).send("Carrito eliminado correctamente");
+        } else {
+            res.status(404).send("No se encontró el carrito");
+        }
+    } catch (error) {
+        console.error("Error al eliminar el carrito:", error);
+        res.status(500).send("Error interno del servidor");
+    }
+});
+
+
+
 module.exports = router; 

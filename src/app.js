@@ -3,6 +3,7 @@ const app = express();
 const PUERTO = 8080;
 const expresshandlebars = require("express-handlebars");
 const socket = require("socket.io");
+const MessageModel = require("./models/message.model.js");
 require("./database.js"); // esto hace la conexión con database.js y data base.js hace la conexión con mongodb
 
 const productsRouter= require("./routes/products.router.js");
@@ -33,6 +34,24 @@ const httpserver = app.listen(PUERTO,()=>{
 
 const io = socket(httpserver);
 
+// Manejo de eventos de chat
+
+io.on("connection",  (socket) => {
+    console.log("Nuevo usuario conectado");
+
+    socket.on("message", async data => {
+
+        //Guardo el mensaje en MongoDB: 
+        await MessageModel.create(data);
+
+        //Obtengo los mensajes de MongoDB y se los paso al cliente: 
+        const messages = await MessageModel.find();
+        console.log(messages);
+        io.sockets.emit("message", messages);
+    })
+});
+
+//manejo de eventos de productos
 const ProductManager = require("./controllers/productManager.js");
 const productManager = new ProductManager("./src/models/productos.json");
 

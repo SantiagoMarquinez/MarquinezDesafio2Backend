@@ -25,7 +25,12 @@ Swal.fire({
 
 chatBox.addEventListener("keyup", (event) => {
     if(event.key === "Enter") {
+        console.log(chatBox.value);
+        console.log(user)
         if(chatBox.value.trim().length > 0) {
+            console.log("hola")
+            console.log(chatBox.value.trim())
+            console.log(user)
             //Trim nos permite sacar los espacios en blanco del principio y del final de un string. 
             //Si el mensaje tiene más de 0 caracteres, lo enviamos al servidor. 
             socket.emit("message", {user: user, message: chatBox.value});
@@ -37,12 +42,19 @@ chatBox.addEventListener("keyup", (event) => {
 
 //listerner de mensajes
 
-socket.on("messagesLogs", data => {
+socket.on("message", data => {
     const log = document.getElementById("messagesLogs");
     let messages = "";
 
-    data.forEach( (message) => {
-        messages = messages + `${message.user}: ${message.message} <br>`
-    })
-        log.innerHTML = messages;
-})
+    // Verifica si data es un array antes de usar forEach
+    if (Array.isArray(data)) {
+        data.forEach(message => {
+            messages += `${message.user}: ${message.message} <br>`;
+        });
+    } else {
+        // Si data no es un array, imprímelo en la consola para debug
+        console.error("Los datos recibidos no son un array:", data);
+    }
+
+    log.innerHTML = messages;
+});
