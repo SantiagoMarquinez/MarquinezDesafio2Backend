@@ -1,17 +1,17 @@
+const ProductManager = require("../controllers/productManager");// aca estoy "importando"  productManager.js
 const express = require("express");
 const router = express.Router();
-// const path = require("path");
+// const mongoose = require("mongoose");
 
-const ProductManager = require("../controllers/productManager");// aca estoy "importando"  productManager.js
 const products = new ProductManager();
 
 //muestro todos los productos->
 router.get("/", async (req, res) => {
     try {
-        const limit = req.query.limit;
+        const limit = parseInt (req.query.limit);
         const prodList = await products.getProducts();
         console.log(prodList);
-        if (limit>=0) {
+        if (limit>0) {
             res.json(prodList.slice(0, limit));
         } else{
             res.json(prodList);
@@ -72,20 +72,22 @@ router.put("/:id", async (req, res) => {
     }
 });
 
+
 //borro un producto->
-router.delete ("/:pid", async (req, res)=>{
-    const id = req.params.pid;
+router.delete("/:pid", async (req, res) => {
     try {
-        await products.deleteProduct(id);
+        const productId = req.params.pid; // Obtener el ID del producto de los parámetros
+        await products.deleteProduct(productId); // Llamar a la función deleteProduct con el ID del producto
         res.json({
             message: "El producto fue eliminado correctamente"
-        })
-    }
-    catch {
-        console.error(`No fue posible eliminar el producto`,error)
+        });
+    } catch (error) {
+        console.error(`No fue posible eliminar el producto`, error);
         res.status(500).send("Error del servidor - el producto no fue eliminado");
     }
-})
+});
+
+
 
 
 module.exports = router;
