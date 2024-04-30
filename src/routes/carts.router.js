@@ -3,7 +3,9 @@ const router = express.Router();
 const CartManager = require("../controllers/cartManager");
 const cartManager = new CartManager(); //"./src/models/carts.json"
 
-router.post ("/", async (req, res)=>{//crea un carrito
+
+// Crear un carrito
+router.post ("/", async (req, res)=>{
     try {
         const newCart = await cartManager.createNewCart();
         res.json(newCart)
@@ -16,7 +18,7 @@ router.post ("/", async (req, res)=>{//crea un carrito
 });
 
 
-//muestro todos los carritos
+// Mostrar todos los carritos
 router.get("/", async (req,res)=>{
     try{
         const carts = await cartManager.getCarts();
@@ -27,29 +29,34 @@ router.get("/", async (req,res)=>{
     }
 });
 
-//muestra los productos de un carrito determinado por id
-router.get ("/:cid", async(req, res)=>{
+// Mostrar los detalles completos de un carrito por su ID
+router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
     try {
-        const cart = await cartManager.getCartById (cartId);
+        const cart = await cartManager.getCartById(cartId);
+        if (!cart) {
+            return res.status(404).json({ error: `No se encontró el carrito con ID ${cartId}` });
+        }
+        console.log("Productos del carrito:", cart.products);
+        console.log(cart)
+        // Enviar solo los productos del carrito
         res.json(cart.products);
     } catch (error) {
-        res.status(500).json({
-            error: "Error interno del servidor"
-        });
-        console.error(`Error - No se pudo obtener el carrito con id ${cartId}`);
+        console.error(`Error al obtener el carrito con ID ${cartId}:`, error);
+        res.status(500).json({ error: "Error interno del servidor" });
     }
-})
+});
 
 
-//agrego un producto a un carrito con un id determinado
+
+// Agregar un producto a un carrito con un ID determinado
 router.post("/:cid/product/:pid", async (req, res) => {
     const cartId = req.params.cid;
     const productId = req.params.pid;
     const quantity = req.body.quantity || 1; 
 
     try {
-        const updateCart = await cartManager.addProductToCart (cartId, productId, quantity);
+        const updateCart = await cartManager.addProductToCart (cartId, {_id: productId}, {quantity:quantity});
         res.json(updateCart.products);
     } catch (error) {
         res.status(500).json({
@@ -59,23 +66,53 @@ router.post("/:cid/product/:pid", async (req, res) => {
     }
 });
 
-
-router.delete("/:cid", async (req, res) => {
+// Eliminar un producto del carrito
+router.delete("/:cid/product/:pid", async (req, res) => {
     try {
         const cartId = req.params.cid;
-        const result = await cartManager.deleteCartById(cartId);
+        const productId = req.params.pid;
+        const result = await cartManager.deleteProductById(cartId, productId);
         
         if (result.success) {
-            res.status(200).send("Carrito eliminado correctamente");
+            res.status(200).send("Producto eliminado correctamente");
         } else {
-            res.status(404).send("No se encontró el carrito");
+            res.status(404).send("No se pudo eliminar el producto");
         }
     } catch (error) {
-        console.error("Error al eliminar el carrito:", error);
+        console.error(`Error al eliminar el producto ${productId} del carrito ${cartId}`, error);
         res.status(500).send("Error interno del servidor");
     }
 });
 
+// Actualizar carrito
+router.put ("/:cid", async(req, res)=>{
+    const cartId = req.params.cid;
+    const products = req.body.products;
+    try {
+        const updatedCart = await cartManager.updateCart(cartId, products);
+        if (!updatedCart) {
+            return res.status(404).json({ error: `No se encontró el carrito con ID ${cartId}` });
+        }
+        res.json(updatedCart.products);
+    } catch (error) {
+        console.error(`Error al actualizar el carrito con ID ${cartId}:`, error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
 
+// Vaciar carrito
+router.delete ("/:cid", async(req, res)=>{
+    const cartId = req.params.cid;
+    try {
+        const updatedCart = await cartManager.clearCart(cartId);
+        if (!updatedCart) {
+            return res.status(404).json({ error: `No se encontró el carrito con ID ${cartId}` });
+        }
+        res.json(updatedCart.products);
+    } catch (error) {
+        console.error(`Error al vaciar el carrito con ID ${cartId}:`, error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
 
-module.exports = router; 
+module.exports = router;

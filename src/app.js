@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));// extended true indica que trab
 //configuro handlebars
 app.engine("handlebars", expresshandlebars.engine());
 app.set("view engine", "handlebars");
-app.set ("views", "./src/views"); // revisar que este bien la ruta!!!
+app.set ("views", "./src/views"); 
 
 // RUTAS 
 app.use("/api/products", productsRouter);
@@ -61,14 +61,14 @@ io.on("connection", async (socket) => {
     //Enviamos el array de productos al cliente: 
     socket.emit("products", await productManager.getProducts());
 
-    //Recibimos el evento "eliminarProducto" desde el cliente: 
+    //Recibimos el evento deleteProduct desde el cliente: 
     socket.on("removeProduct", async (id) => {
         await productManager.deleteProduct(id);
         //Enviamos el array de productos actualizados: 
         socket.emit("products", await productManager.getProducts());
     })
 
-    //recibo el evento addProduct desde el cliente:
+    //Recibimos el evento addProduct desde el cliente:
     socket.on("addProduct", async (product)=>{
         await productManager.addProduct(product)
         //Enviamos el array de productos actualizados: 
