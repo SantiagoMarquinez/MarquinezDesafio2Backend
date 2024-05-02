@@ -56,7 +56,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
     const quantity = req.body.quantity || 1; 
 
     try {
-        const updateCart = await cartManager.addProductToCart (cartId, {_id: productId}, {quantity:quantity});
+        const updateCart = await cartManager.addProductToCart (cartId, {_id: productId}, quantity);
         res.json(updateCart.products);
     } catch (error) {
         res.status(500).json({
@@ -66,7 +66,7 @@ router.post("/:cid/product/:pid", async (req, res) => {
     }
 });
 
-// Eliminar un producto del carrito
+// Eliminar un producto del carrito 
 router.delete("/:cid/product/:pid", async (req, res) => {
     try {
         const cartId = req.params.cid;
@@ -111,6 +111,26 @@ router.delete ("/:cid", async(req, res)=>{
         res.json(updatedCart.products);
     } catch (error) {
         console.error(`Error al vaciar el carrito con ID ${cartId}:`, error);
+        res.status(500).json({ error: "Error interno del servidor" });
+    }
+});
+
+
+//eliminar un producto del carrito por id
+router.delete("/:cid/products/:pid", async (req, res) => {
+    const cartId = req.params.cid;
+    const productId = req.params.pid;
+
+    try {
+        const updatedCart = await cartManager.deleteProductById(cartId, productId);
+        
+        if (!updatedCart) {
+            return res.status(404).json({ error: `No se encontró el carrito con ID ${cartId}` });
+        }
+
+        res.json(updatedCart);
+    } catch (error) {
+        console.error(`Error al eliminar el producto del carrito con ID ${cartId}:`, error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
