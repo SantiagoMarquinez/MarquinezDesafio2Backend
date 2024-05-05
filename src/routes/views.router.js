@@ -9,17 +9,21 @@ const ProductModel = require('../models/product.model');
 
 router.get("/products", async (req, res) => {
     try {
-        const { page = 1, limit = 10, sort, category } = req.query;
+        const { page = 1, limit = 10, sort, category, available } = req.query;
 
-        const query = category ? { category } : {};
         const options = {
             page: parseInt(page),
             limit: parseInt(limit),
             sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
         };
-        
-        const products = await ProductModel.paginate(query, options);
-        
+
+        const filter = {};
+        if (category) filter.category = category;
+        if (available !==undefined) filter.status = available;
+
+        console.log(filter.status)
+
+        const products = await ProductModel.paginate(filter, options);
 
         const productsData = products.docs.map(doc => doc.toObject());
 
@@ -37,6 +41,7 @@ router.get("/products", async (req, res) => {
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
+
 
 
 
