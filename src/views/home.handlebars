@@ -1,20 +1,27 @@
-    <h1>Home</h1>
+<h1>Home</h1>
 
-    <div id="productsContainer">
-        {{#each products}}
-            <div class="card">
-                <p>{{this.title}}</p>
-                <p>{{this.description}}</p>
-                <p>{{this.price}}</p>
-                <p>{{this.thumbnail}}</p>
-                <p>{{this.code}}</p>
-                <p>{{this.stock}}</p>
-                <p>{{this.id}}</p>
-                <p>{{this.category}}</p>
-            </div>
-        {{/each}}
-    </div>
+<div id="productsContainer">
+    {{#each products.docs}}
+        <div class="card">
+            <p>{{this.title}}</p>
+            <p>{{this.price}}</p>
+            <p>{{this.thumbnail}}</p>
+        </div>
+    {{/each}}
+</div>
 
+<!-- Agregar botones de paginación -->
+{{#if products.hasPrevPage}}
+    <a href="?page={{products.prevPage}}">PrevPage</a>
+{{/if}}
+
+{{#each products.pagesInRange}}
+    <a href="?page={{this}}">{{this}}</a>
+{{/each}}
+
+{{#if products.hasNextPage}}
+    <a href="?page={{products.nextPage}}">NextPage</a>
+{{/if}}
 
 <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
 <script src="js/main.js"></script>

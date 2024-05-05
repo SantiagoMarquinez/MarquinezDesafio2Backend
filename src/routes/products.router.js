@@ -1,7 +1,7 @@
 const ProductManager = require("../controllers/productManager");// aca estoy "importando"  productManager.js
 const express = require("express");
 const router = express.Router();
-// const mongoose = require("mongoose");
+
 
 const products = new ProductManager();
 

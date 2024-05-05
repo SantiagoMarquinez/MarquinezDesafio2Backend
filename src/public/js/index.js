@@ -46,13 +46,11 @@ socket.on("message", data => {
     const log = document.getElementById("messagesLogs");
     let messages = "";
 
-    // Verifica si data es un array antes de usar forEach
     if (Array.isArray(data)) {
         data.forEach(message => {
             messages += `${message.user}: ${message.message} <br>`;
         });
     } else {
-        // Si data no es un array, imprímelo en la consola para debug
         console.error("Los datos recibidos no son un array:", data);
     }
 
