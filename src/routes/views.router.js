@@ -9,33 +9,35 @@ const ProductModel = require('../models/product.model');
 
 router.get("/products", async (req, res) => {
     try {
-        const page = req.query.page || 1;
-        const limit = req.query.limit || 4; 
+        const { page = 1, limit = 10, sort, category } = req.query;
 
+        const query = category ? { category } : {};
         const options = {
-            page: page,
-            limit: limit,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            sort: sort ? { price: sort === 'asc' ? 1 : -1 } : undefined,
         };
+        
+        const products = await ProductModel.paginate(query, options);
+        
 
-        
-        
-        const products = await ProductModel.paginate({}, options);
-        
         const productsData = products.docs.map(doc => doc.toObject());
-        
-        //Defino el rango de paginas a mostrar
+
+        // Defino el rango de páginas a mostrar
         const startPage = Math.max(1, products.prevPage);
         const endPage = Math.min(products.totalPages, products.nextPage);
         const pagesInRange = [];
         for (let i = startPage; i <= endPage; i++) {
             pagesInRange.push(i);
         }
-        res.render("home", { products: { ...products, docs: productsData, pagesInRange: pagesInRange } }); // Pasa todos los datos de paginación junto con los documentos de productos convertidos
+
+        res.render("home", { products: { ...products, docs: productsData, pagesInRange: pagesInRange } });
     } catch (error) {
         console.log("No se pudieron obtener los productos");
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
+
 
 
 
