@@ -17,7 +17,7 @@ const renderProducts = (products) => {
         const card = document.createElement("div");
         card.innerHTML = `
             <div class="card">
-                <p>ID:${element.id} </p>
+                <p>ID:${element._id}</p>
                 <p>Titulo: ${element.title}</p>
                 <p>Precio: ${element.price}</p>
                 <button>Eliminar</button>
@@ -66,5 +66,35 @@ const renderMessages = (messages) => {
         const messageElement = document.createElement("div");
         messageElement.textContent = message.text;
         messagesLogs.appendChild(messageElement);
+    });
+};
+
+
+// Función para renderizar los productos del carrito
+const renderCartProducts = (cart) => {
+    const productsContainer = document.getElementById("productsContainer");
+    productsContainer.innerHTML = "";
+
+    cart.forEach(cartItem => {
+        const product = cartItem.product; // Producto dentro del carrito
+        const quantity = cartItem.quantity; // Cantidad del producto en el carrito
+
+        const card = document.createElement("div");
+        card.innerHTML = `
+            <div class="card">
+                <p>ID:${product._id}</p>
+                <p>Titulo: ${product.title}</p>
+                <p>Descripción: ${product.description}</p>
+                <p>Precio: ${product.price}</p>
+                <p>Cantidad en el carrito: ${quantity}</p>
+                <button>Eliminar</button>
+            </div>
+        `;
+        productsContainer.appendChild(card);
+
+        // Agregar evento al botón eliminar
+        card.querySelector("button").addEventListener("click", () => {
+            removeProductFromCart(product._id); // Llama a la función para eliminar el producto del carrito
+        });
     });
 };

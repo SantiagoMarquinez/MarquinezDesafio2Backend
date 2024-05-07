@@ -1,7 +1,35 @@
 const { trusted } = require("mongoose");
 const CartModel = require("../models/cart.model.js");
+const ProductModel = require('../models/product.model.js');
 
 class CartManager {
+
+    
+    //obtener productos de un carrito
+    async getProductsFromCart(id) {
+        try {
+            const cartFound = await CartModel.findById(id);
+            if (!cartFound) {
+                return { status: false, message: `ERROR: Carrito no encontrado con ID ${id}` };
+            }
+
+            const productsWithDetails = [];
+
+            for (const cartItem of cartFound.products) {
+                // Consulto la coleccion de productos para obtener la informacion completa del producto
+                const product = await ProductModel.findById(cartItem.product);
+                // Combino la información completa del producto con la cantidad correspondiente en el carrito
+                productsWithDetails.push({ product: product, quantity: cartItem.quantity });
+            }
+
+            return { status: true, message: 'Carrito encontrado:', cart: productsWithDetails };
+        } catch (error) {
+            return { status: false, message: `LO SENTIMOS, HA OCURRIDO UN ERROR: ${error}` };
+        }
+    }
+
+
+
 
     // Crear un nuevo carrito
     async createNewCart() {
@@ -20,7 +48,7 @@ class CartManager {
         try {
             const cart = await this.getCartById(cartId);
             const productId = product._id;
-            
+
             const productIndex = cart.products.findIndex(p => p.product._id.toString() === productId);
 
             console.log(productIndex)

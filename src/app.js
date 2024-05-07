@@ -58,17 +58,17 @@ const productManager = new ProductManager("./src/models/productos.json");
 io.on("connection", async (socket) => {
     console.log("Un cliente conectado");
 
-    //Enviamos el array de productos al cliente: 
+    //Envio array de productos al cliente: 
     socket.emit("products", await productManager.getProducts());
 
-    //Recibimos el evento deleteProduct desde el cliente: 
+    //Recibo el evento deleteProduct desde el cliente: 
     socket.on("removeProduct", async (id) => {
         await productManager.deleteProduct(id);
         //Enviamos el array de productos actualizados: 
         socket.emit("products", await productManager.getProducts());
     })
 
-    //Recibimos el evento addProduct desde el cliente:
+    //Recibo el evento addProduct desde el cliente:
     socket.on("addProduct", async (product)=>{
         await productManager.addProduct(product)
         //Enviamos el array de productos actualizados: 
@@ -77,3 +77,14 @@ io.on("connection", async (socket) => {
 
 })
 
+// Manejo de eventos de carrito
+const CartManager = require("./controllers/cartManager.js");
+const cartManager = new CartManager();
+
+io.on("connection", async (socket) => {
+    console.log("Un cliente conectado");
+
+    // Enviamos los datos del carrito al cliente cuando se conecta
+    socket.emit("cart", await cartManager.getProductsFromCart());
+
+});

@@ -33,19 +33,20 @@ router.get("/", async (req,res)=>{
 router.get("/:cid", async (req, res) => {
     const cartId = req.params.cid;
     try {
-        const cart = await cartManager.getCartById(cartId);
+        const cart = await cartManager.getProductsFromCart(cartId);
         if (!cart) {
             return res.status(404).json({ error: `No se encontró el carrito con ID ${cartId}` });
         }
-        console.log("Productos del carrito:", cart.products);
+        console.log("Productos del carrito:", cart.cart);
         console.log(cart)
         // Enviar solo los productos del carrito
-        res.json(cart.products);
+        res.render('carts', { cart: cart.cart });
     } catch (error) {
         console.error(`Error al obtener el carrito con ID ${cartId}:`, error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
 });
+
 
 
 

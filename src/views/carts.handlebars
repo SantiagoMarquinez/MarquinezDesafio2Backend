@@ -1,0 +1,20 @@
+<link rel="stylesheet" href="/css/style.css">
+<h3>Carrito</h3>
+<div id="productsContainer">
+    {{#each cart}}
+    <div>
+        <div class="card">
+            <h4>hola hola hola</h4>
+            <p>{{product.title}}</p>
+            <p>{{product.description}}</p>
+            <p>Cantidad: {{quantity}}</p>
+        </div>
+    </div>
+    {{/each}}
+</div>
+
+<script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
+<script src="/js/main.js"></script>
+
+
+
