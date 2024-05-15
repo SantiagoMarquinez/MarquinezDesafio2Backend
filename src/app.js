@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const session = require("express-session");
 const PUERTO = 8080;
 const expresshandlebars = require("express-handlebars");
 const socket = require("socket.io");
@@ -9,6 +10,13 @@ require("./database.js"); // esto hace la conexión con database.js y data base.
 const productsRouter= require("./routes/products.router.js");
 const cartsRouter= require("./routes/carts.router.js") ;
 const viewsRouter = require("./routes/views.router.js");
+// const sessionRouter = require("./routes/session.router.js");
+const jwt = require("jsonwebtoken");
+const cookieParser = require("cookie-parser");
+const initializePassport = require("./config/passport.config.js");
+const passport = require("passport");
+const { authorization, passportCall } = require("./utils/util.js");
+const userRouter = require("./routes/user.router.js");
 
 
 //Middleware
@@ -16,6 +24,12 @@ app.use(express.static("./src/public"));
 //con estas dos lineas el servidor express puede interpretar mensajes de tipo json en formato urlencoded que recibira de postman
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));// extended true indica que trabajamos con datos complejos  (no solo strings)
+//Session
+app.use(session({
+    secret:"secretCoder",
+    resave: true, 
+    saveUninitialized:true,   
+}));
 
 //configuro handlebars
 app.engine("handlebars", expresshandlebars.engine());
@@ -25,6 +39,8 @@ app.set ("views", "./src/views");
 // RUTAS 
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
+app.use("/api/users", userRouter);
+app.use("/api/sessions", sessionRouter);
 app.use("/", viewsRouter); 
 
 
