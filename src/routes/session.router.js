@@ -1,17 +1,14 @@
-const express = require("express");
+const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const passport = require("passport");
 
-//Login: 
-router.post("/login", passport.authenticate("local", {
-    successRedirect: "/products",
-    failureRedirect: "/login",
+// Ruta para autenticacion con GitHub
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+// Callback de GitHub despues de la autenticacion
+router.get('/github/callback', passport.authenticate('github', {
+    successRedirect: '/products',
+    failureRedirect: '/login'
 }));
-
-//Logout: 
-router.get("/logout", (req, res) => {
-    req.logout();
-    res.redirect("/login");
-});
 
 module.exports = router;
