@@ -87,3 +87,15 @@ h2 {
     padding: 10px; /* Espaciado interno */
 
 }
+
+
+/*Estilos de Login y registro*/
+
+.registerForm {
+    align-items: baseline;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    color: antiquewhite;
+    width: 300px;
+}

@@ -1,40 +1,37 @@
-const express = require("express");
+const express = require('express');
+const passport = require('passport');
 const router = express.Router();
-const UserModel = require("../models/user.model.js");
-const { createHash } = require("../utils/hashbcryp.js");
 
-//Post para generar un usuario y almacenarlo en MongoDB:
+// Ruta para registrar un nuevo usuario
+router.post('/register', passport.authenticate('register', {
+    successRedirect: '/login',
+    failureRedirect: '/register',
 
-router.post("/", async (req, res) => {
-    const { first_name, last_name, email, password, age } = req.body;
+}));
 
-    try {
-        // Verificar si el correo electrónico ya está registrado
-        const existingUser = await UserModel.findOne({ email: email });
-        if (existingUser) {
-            return res.status(400).send({ error: "El correo electrónico ya está registrado" });
+// Ruta para iniciar sesión con estrategia Local
+router.post('/login', passport.authenticate('login', {
+    successRedirect: '/products',
+    failureRedirect: '/login',
+}));
+
+// Ruta para autenticación con GitHub
+router.get('/github', passport.authenticate('github', { scope: ['user:email'] }));
+
+// Callback de GitHub después de la autenticación
+router.get('/github/callback', passport.authenticate('github', {
+    successRedirect: '/products',
+    failureRedirect: '/login'
+}));
+
+// Ruta para cerrar sesión
+router.get('/logout', (req, res) => {
+    req.logout((err) => {
+        if (err) {
+            return next(err);
         }
-
-        // Definir el rol del usuario
-        const role = email === 'admincoder@coder.com' ? 'admin' : 'usuario';
-
-        // Crear un nuevo usuario
-        const newUser = await UserModel.create({ first_name, last_name, email, password: createHash(password), age, role });
-
-        // Almacenar información del usuario en la sesión (puedes ajustarlo según tus necesidades)
-        req.session.login = true;
-        req.session.user = { ...newUser._doc };
-
-        //res.status(200).send({ message: "Usuario creado con éxito" });
-        res.redirect("/products");
-
-    } catch (error) {
-        console.error("Error al crear el usuario:", error);
-        res.status(500).send({ error: "Error interno del servidor" });
-    }
+        res.redirect('/login');
+    });
 });
-
-
-
 
 module.exports = router;
