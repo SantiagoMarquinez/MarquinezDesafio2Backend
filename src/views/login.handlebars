@@ -16,8 +16,10 @@
         <input type="password" id="password" name="password" required>
         <button type="submit">Ingresar</button>
     </form>
-    <a href="/api/sessions/github">Iniciar sesión con GitHub</a>
-    <a href="/register">Registrarme</a>
+
+    <button onclick="window.location.href='/api/sessions/github'">Ingresar con GitHub</button>
+    <button onclick="window.location.href='/register'">Registrarme</button>
+
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
