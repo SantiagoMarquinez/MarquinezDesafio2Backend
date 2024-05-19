@@ -93,6 +93,37 @@ const initializePassport = () => {
         }
     }));
 
+
+    //Estrategia para iniciar sesion con google
+
+    const GoogleStrategy = require('passport-google-oauth20').Strategy;
+
+            // Configuración de Google Strategy
+    passport.use(new GoogleStrategy({
+        clientID: 'YOUR_GOOGLE_CLIENT_ID',
+        clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET',
+        callbackURL: 'http://localhost:8080/api/sessions/google/callback'
+    },
+        async (accessToken, refreshToken, profile, done) => {
+            try {
+                let user = await userModel.findOne({ email: profile.emails[0].value });
+                if (!user) {
+                    let newUser = {
+                        first_name: profile.name.givenName,
+                        last_name: profile.name.familyName,
+                        email: profile.emails[0].value,
+                        password: createHash('google')
+                    };
+                    user = await userModel.create(newUser);
+                }
+                return done(null, user);
+            } catch (error) {
+                return done(error);
+            }
+        }
+    ));
+
+
     // Serializar y deserializar el usuario para la sesión
     passport.serializeUser((user, done) => {
         done(null, user._id);

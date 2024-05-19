@@ -11,4 +11,14 @@ router.get('/github/callback', passport.authenticate('github', {
     failureRedirect: '/login'
 }));
 
+
+// Ruta para autenticacion con Google
+router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
+
+router.get('/google/callback', passport.authenticate('google', {
+    successRedirect: '/products',
+    failureRedirect: '/login'
+}));
+
+
 module.exports = router;

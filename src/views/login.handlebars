@@ -8,17 +8,20 @@
 </head>
 
 <body>
-    <h3>Login</h3>
-    <form action="/api/users/login" method="post" class="registerForm">
-        <label for="email">Email:</label>
-        <input type="email" id="email" name="email" required>
-        <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" required>
-        <button type="submit">Ingresar</button>
-    </form>
+    <div class="loginContainer">
+        <form action="/api/users/login" method="post" class="registerForm">
+            <h3>Login</h3>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <label for="password">Contraseña:</label>
+            <input type="password" id="password" name="password" required>
+            <button type="submit">Ingresar</button>
+            <button onclick="window.location.href='/api/sessions/github'">Ingresar con GitHub</button>
+            <button onclick="window.location.href='/api/sessions/google'">Ingresar con Google</button>
+            <button onclick="window.location.href='/register'">Registrarme</button>
+        </form>
+    </div>
 
-    <button onclick="window.location.href='/api/sessions/github'">Ingresar con GitHub</button>
-    <button onclick="window.location.href='/register'">Registrarme</button>
 
     <script src="https://cdn.socket.io/4.7.4/socket.io.min.js"></script>
     <script src="/js/main.js"></script>
