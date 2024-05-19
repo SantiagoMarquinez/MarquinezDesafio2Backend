@@ -1,5 +1,5 @@
 body {
-    font-family: Arial, sans-serif;
+    font-family: sans-serif;
     background-color: #f4f4f4;
     margin: 0;
     padding: 0;
@@ -118,6 +118,15 @@ label, input, button {
     display: block;
     width: 100%;
     margin-bottom: 10px;
+    font-family:sans-serif;
+}
+
+input {
+    border: 1px solid #d4d1d3;
+    border-radius: 7px;
+    height: 40px;
+    padding: 0 10px;
+    font-size: 14px;
 }
 
 button {
