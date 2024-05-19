@@ -15,7 +15,7 @@ const productsRouter = require("./routes/products.router.js");
 const cartsRouter = require("./routes/carts.router.js");
 const viewsRouter = require("./routes/views.router.js");
 const userRouter = require("./routes/user.router.js");
-const sessionRouter = require("./routes/session.router.js"); 
+const sessionRouter = require('./routes/session.router.js'); 
 
 const initializePassport = require("./config/passport.config.js");
 
@@ -53,7 +53,7 @@ app.set("views", "./src/views");
 app.use("/api/products", productsRouter);
 app.use("/api/carts", cartsRouter);
 app.use("/api/users", userRouter);
-app.use("/api/sessions", sessionRouter);
+app.use('/api/sessions', sessionRouter);
 app.use("/", viewsRouter);
 
 const httpserver = app.listen(PUERTO, () => {

@@ -66,20 +66,21 @@ const initializePassport = () => {
 
     // Estrategia para autenticación con GitHub
     passport.use('github', new GitHubStrategy({
-        clientID: 'Iv23liBxSEJXDVkLcfMe',
-        clientSecret: 'a79b8d979c8eee44f887eb0b7d6f329b17e4d791',
+        clientID: 'Ov23liRquhuweu9apS2T',
+        clientSecret: 'dc37ca2a2810efe13a71b2c8e083b35e767cb1a2',
         callbackURL: 'http://localhost:8080/api/sessions/github/callback'
     }, async (accessToken, refreshToken, profile, done) => {
         try {
             // Verificamos si ya existe un usuario con el email de GitHub
-            let user = await userModel.findOne({ email: profile._json.email });
+            const email = profile._json.email || `${profile.username}@github.com`; // usa el nombre de usuario si el correo no está disponible
+            let user = await userModel.findOne({ email });
             if (!user) {
                 // Si no existe, creamos un nuevo usuario
                 let newUser = {
-                    first_name: profile._json.name,
-                    last_name: '',
-                    age: 36,
-                    email: profile._json.email,
+                    first_name: profile._json.name || profile.username,
+                    last_name: profile._json.name || profile.username,
+                    age: 18,// uso 18 para que sea mayor de edad
+                    email: email,
                     password: createHash('github')
                 };
                 let resultado = await userModel.create(newUser);
