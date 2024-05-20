@@ -1,0 +1,228 @@
+[33mcommit 709692f9eebf6a783b5ac2e36ef2261101daa504[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Mon May 20 11:22:03 2024 -0300
+
+    agregue un archivo al gitignore
+
+[33mcommit 9bc3108e06290a4bf00eb2e9950da4a05dffe262[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Mon May 20 11:19:51 2024 -0300
+
+    corregi la estrategia para login con google
+
+[33mcommit 78daf2b9ae5d28c667db7944cbf5094baf3584d6[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 19 17:54:46 2024 -0300
+
+    .
+
+[33mcommit be23da6c7769cb294ff814e1aac4c71f91da0432[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 19 17:54:14 2024 -0300
+
+    agregue estrategia de login con google (falta terminar) y modifique la estetica principalmente de los formularios
+
+[33mcommit 88e836e70def95f4f2fb2c4510de576f4f2972f3[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sat May 18 21:03:04 2024 -0300
+
+    Corregi errores que tenia en el login con github
+
+[33mcommit ae45a52a3e0cd89df71f9dac4f0815c64fccecee[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sat May 18 20:22:38 2024 -0300
+
+    Arregle el login con github que no funcionaba correctamente
+
+[33mcommit e543eea63187f348b71aec6c3cb4ff26ab6aa414[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sat May 18 19:45:43 2024 -0300
+
+    ingresar con gitHub y registrarme ahora son botones y etiquetas <a>
+
+[33mcommit f34b9cec7e162b6fe7e82f49a18020888b674d42[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sat May 18 19:32:23 2024 -0300
+
+    .
+
+[33mcommit 42aad0f67e3c727bb24823243280a8827c157604[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sat May 18 19:06:14 2024 -0300
+
+    termine el desafio 2 de login
+
+[33mcommit 67fd03af03b71d0c25e6b55d54650a7fd1b86ad6[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Wed May 15 17:10:11 2024 -0300
+
+    falta terminar de adaptar la app para usar passport
+
+[33mcommit 0f1cffaa11850ec4538a9092ac96243fd9811bf3[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 12 11:26:17 2024 -0300
+
+    quite un texto de verificación que habia quedado
+
+[33mcommit e6beaaa7c0c438fc79a1ca61c75f2cb9dbedd31d[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue May 7 12:06:56 2024 -0300
+
+    falta resolver que cart no me muestra los campos del producto. el resto esta
+
+[33mcommit e9c306cafabafa7cc71b7ebc227d096dcf527ee8[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 5 20:27:36 2024 -0300
+
+    agregue la posibilidad de filtrar por status
+
+[33mcommit 6f6e0e34ff6c30f4e88d9e3d1eaf63f1063a3e6e[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 5 19:44:33 2024 -0300
+
+    complete el paginate de products
+
+[33mcommit 6bdb343d1cde41156d2806824f8b7ca90f314264[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun May 5 18:33:46 2024 -0300
+
+    resolvi problema de renderizacion y hice el paginate de products
+
+[33mcommit 72dc91ccc894a77feefae1648cf32ebff459b8cc[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri May 3 11:43:27 2024 -0300
+
+    .
+
+[33mcommit c964af5dd62cbcabba7aec34f8d75a03cb894109[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Thu May 2 15:42:08 2024 -0300
+
+    termine con el cart aplicando populate. instale paginate
+
+[33mcommit 7aa627634cca6a7c254a0cb7fb3b2080aa25a63c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Apr 30 16:23:39 2024 -0300
+
+    arreglé un error que me tiraba el deleteProduct
+
+[33mcommit b9f65145e07a7899e6ae1afe931ce440f1f0688c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Apr 30 12:58:22 2024 -0300
+
+    termine con la parte de los carritos e implemente populate
+
+[33mcommit 39c53b901ffe688a747bbaf0f2e89bd7652f3f24[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Sun Apr 28 20:51:22 2024 -0300
+
+    terminé el chat
+
+[33mcommit f95886b3897624682cc514e6eb0836cb88067d0c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri Apr 26 15:31:49 2024 -0300
+
+    .
+
+[33mcommit 71bb486083ffe3ee911e4c969baeb6b0094f8af3[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri Apr 26 15:30:20 2024 -0300
+
+    .
+
+[33mcommit a7145472c7872732945d7282e4db1b114c89e988[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Wed Apr 24 13:57:52 2024 -0300
+
+    adapte toda la parte de los productos a mongoose y elimine file sistem
+
+[33mcommit bbd2832e35aede1fadf8d602e5409e1399cdcf3a[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Wed Mar 27 21:33:31 2024 -0300
+
+    termine el desafio y le di estilos basicos a realTimeProducts
+
+[33mcommit 9ca9889ded1c6f548c0bbd436df22715e2ed762c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Wed Mar 27 14:06:53 2024 -0300
+
+    .
+
+[33mcommit 5eeab14d14295203e5f962b675343fbe85ebd578[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Mar 26 16:03:52 2024 -0300
+
+    cree las views y las rutas de las views
+
+[33mcommit 40d2826fecfd05b78066ef82414f67cbee960021[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Thu Mar 21 22:38:02 2024 -0300
+
+    .
+
+[33mcommit 77422f1fa41f2d794ea31c83137ce6ddd5813eb4[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Thu Mar 21 17:39:58 2024 -0300
+
+    Hice el CartManager y comence con carts.router
+
+[33mcommit fa61b23416a7372c79b562a01e913bade3cd3946[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Thu Mar 21 16:08:54 2024 -0300
+
+    termine los endpoints de los productos, modifique la forma de manejar el id autoincrementable y como se genera y lee el archivo porque la forma en que lo hacia antes era mas complicada y generaba errores
+
+[33mcommit f71be22146394de6154e89191ceb725c88a5fdda[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Mar 19 19:43:46 2024 -0300
+
+    hice el endpoint para modificar un producto
+
+[33mcommit c2a92b03f564451a5ed458ccf6860440712fda9b[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Mar 19 19:02:35 2024 -0300
+
+    hice el endpoint para agregar un producto a products.json en el cual se pueden mandar mas de un producto a la vez desde postman y los va agregando de a uno
+
+[33mcommit 673ab2e9d5f1baebb5effb0c21269ff11f0e4b4c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri Mar 15 17:36:26 2024 -0300
+
+    arme la nueva estructura de archivos, pase todo lo referente a products a products.router y corregi las rutas. elimine console.logue que usaba para controlar errores
+
+[33mcommit 8c6385bbee65a1fff3f59cfebfee7976d0e9f555[m
+Merge: a19dbcc ac57c4e
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri Mar 15 12:04:06 2024 -0300
+
+    Merge branch 'main' of https://github.com/SantiagoMarquinez/MarquinezDesafio2Backend
+
+[33mcommit a19dbcc6818d85d2b2b190b20b92a4584af0d81c[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Fri Mar 15 11:48:40 2024 -0300
+
+    corregi el problema de que no tiraba error cuando el limite era mayor que la cantidad de productos
+
+[33mcommit ac57c4e39dca39ee6faa8ef40b3580e9ac22f1b5[m
+Author: Santiago Marquinez <134158648+SantiagoMarquinez@users.noreply.github.com>
+Date:   Wed Mar 13 14:09:46 2024 -0300
+
+    Delete node_modules directory
+    
+    borre el node module que subi sin querer
+
+[33mcommit 2efdbcb32acf5480207e5fdfe3a612d8d1988912[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Wed Mar 13 14:07:34 2024 -0300
+
+    Corregi los errores en los endpoints e hice que funcione el filtro por limite y por id. corregi problemas de rutas que hacian que me mostrara un array vacio
+
+[33mcommit f39d971086ad2944ddfb4e033ee160f9c3936f54[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue Mar 12 19:09:37 2024 -0300
+
+    termine app.get(/products) sin usar limit y funciona. con /products/id no funciona, this.products figura vacio
+
+[33mcommit 2925df27c8449590c23c4842722382a2f97ee630[m
+Author: Santiago Marquinez <abogmarquinez@gmail.com>
+Date:   Tue
