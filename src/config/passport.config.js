@@ -1,4 +1,5 @@
 // Importamos los módulos necesarios
+require('dotenv').config();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
@@ -66,8 +67,8 @@ const initializePassport = () => {
 
     // Estrategia para autenticación con GitHub
     passport.use('github', new GitHubStrategy({
-        clientID: 'Ov23liRquhuweu9apS2T',
-        clientSecret: 'dc37ca2a2810efe13a71b2c8e083b35e767cb1a2',
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
         callbackURL: 'http://localhost:8080/api/sessions/github/callback'
     }, async (accessToken, refreshToken, profile, done) => {
         try {
@@ -100,8 +101,8 @@ const initializePassport = () => {
 
             // Configuración de Google Strategy
     passport.use(new GoogleStrategy({
-        clientID: 'YOUR_GOOGLE_CLIENT_ID',
-        clientSecret: 'YOUR_GOOGLE_CLIENT_SECRET',
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'http://localhost:8080/api/sessions/google/callback'
     },
         async (accessToken, refreshToken, profile, done) => {
