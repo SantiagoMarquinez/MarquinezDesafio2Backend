@@ -20,6 +20,16 @@ router.get('/google/callback', passport.authenticate('google', {
     failureRedirect: '/login'
 }));
 
+//Ruta current(obtiene el usuario actual)
+router.get('/current', (req, res) => {
+    if (req.isAuthenticated()) {
+        res.render('profile', { user: req.user });
+    } else {
+        res.status(401).json({ message: 'Usuario no autenticado' });
+    }
+});
+
+
 //Ruta logout
 router.get('/logout', (req, res) => {
     req.logout(function(err) {

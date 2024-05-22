@@ -130,6 +130,7 @@ h2 {
 
 form {
     max-width: 400px;
+    min-width: 300px;
     margin: 0 auto;
     padding: 20px;
     background: #fff;

@@ -4,7 +4,11 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
 const bcrypt = require('bcryptjs');
-const userModel = require('../models/user.model'); // Ajusta la ruta según tu estructura de carpetas
+const userModel = require('../models/user.model'); 
+
+const CartManager = require("../controllers/cartManager");
+const cartManager = new CartManager(); 
+const CartModel = require("../models/cart.model.js"); 
 
 // Función para hashear la contraseña
 const createHash = (password) => {
@@ -18,26 +22,28 @@ const isValidPassword = (password, user) => {
 
 // Función para inicializar Passport con nuestras estrategias
 const initializePassport = () => {
-    // Estrategia para registrar un nuevo usuario
     passport.use('register', new LocalStrategy({
         passReqToCallback: true,
         usernameField: 'email'
     }, async (req, username, password, done) => {
         const { first_name, last_name, email, age } = req.body;
         try {
-            // Verificamos si ya existe un usuario con ese email
             let user = await userModel.findOne({ email });
             if (user) {
                 return done(null, false, { message: 'El correo electrónico ya está registrado' });
             }
-            // Creamos un nuevo usuario
+
+            const newCart = await cartManager.createNewCart(); // Create a new cart and get the complete object
+
             let newUser = {
                 first_name,
                 last_name,
                 email,
                 age,
-                password: createHash(password)
+                password: createHash(password),
+                cart: newCart._id // Assign the new cart ID to the user
             };
+
             let resultado = await userModel.create(newUser);
             return done(null, resultado);
         } catch (error) {
@@ -76,12 +82,15 @@ const initializePassport = () => {
             const email = profile._json.email || `${profile.username}@github.com`; // usa el nombre de usuario si el correo no está disponible
             let user = await userModel.findOne({ email });
             if (!user) {
-                // Si no existe, creamos un nuevo usuario
+                // Si no existe, creamos un nuevo usuario y el carrito asociado
+                const newCart = new CartModel({ products: [], quantity: 0 });
+                await newCart.save();
                 let newUser = {
                     first_name: profile._json.name || profile.username,
                     last_name: profile._json.name || profile.username,
-                    age: 18,// uso 18 para que sea mayor de edad
                     email: email,
+                    age: 18,// uso 18 para que sea mayor de edad
+                    cart: newCart._id,
                     password: createHash('github')
                 };
                 let resultado = await userModel.create(newUser);
@@ -109,10 +118,14 @@ const initializePassport = () => {
             try {
                 let user = await userModel.findOne({ email: profile.emails[0].value });
                 if (!user) {
+                    const newCart = new CartModel({ products: [], quantity: 0 });
+                    await newCart.save();
                     let newUser = {
                         first_name: profile.name.givenName,
                         last_name: profile.name.familyName,
                         email: profile.emails[0].value,
+                        age: 18,
+                        cart: newCart._id,
                         password: createHash('google')
                     };
                     user = await userModel.create(newUser);

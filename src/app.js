@@ -45,7 +45,15 @@ app.use(passport.session());
 initializePassport();
 
 // Configuración de handlebars
-app.engine("handlebars", expresshandlebars.engine());
+const hbs = expresshandlebars.create({// esto es para que me permita renderizar los campos de user (configura opciones para el motor de vistas)
+    defaultLayout: 'main', 
+    runtimeOptions: {
+        allowProtoPropertiesByDefault: true,
+        allowProtoMethodsByDefault: true
+    }
+});
+
+app.engine('handlebars', hbs.engine); // aca en vez de usar expresshandlebars.engine, usamos la constante hbs, que es la que tiene la configuracion de las opciones del motor
 app.set("view engine", "handlebars");
 app.set("views", "./src/views");
 
