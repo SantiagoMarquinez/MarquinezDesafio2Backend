@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
+
 <head>
-    <title>Perfil</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile</title>
+    <link rel="stylesheet" type="text/css" href="/css/style.css">
 </head>
 <body>
-    <h1>Perfil del Usuario</h1>
-    <p>Nombre: {{user.first_name}} {{user.last_name}}</p>
-    <p>Email: {{user.email}}</p>
-    <p>Edad: {{user.age}}</p>
-    <p>Carrito ID: {{user.cart}}</p>
+    <div class="form-container">
+        <h1>Mi perfil</h1>
+        <div class="profile-info">
+            <p><strong>Nombre:</strong> {{user.first_name}}</p>
+            <p><strong>Apellido:</strong> {{user.last_name}}</p>
+            <p><strong>Email:</strong> {{user.email}}</p>
+            <p><strong>Edad:</strong> {{user.age}}</p>
+            <p><strong>Cart ID:</strong> <a href="/api/carts/{{user.cart}}">{{user.cart}}</a></p>
+        </div>
+        <a href="/api/sessions/logout" class="button">Logout</a>
+    </div>
 </body>
 </html>

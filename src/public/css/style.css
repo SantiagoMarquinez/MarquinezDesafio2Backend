@@ -264,3 +264,36 @@ input {
 .redirect a:hover {
     text-decoration: underline;
 }
+
+/* PROFILE*/
+.profile-info p {
+    margin: 10px 0;
+}
+
+a.button {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+a.button:hover {
+    background-color: #45a049;
+}
+
+.profile-info {
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 10px;
+}
+
+.profile-info p {
+    margin: 10px 0;
+}
