@@ -16,9 +16,12 @@ router.get('/github/callback', passport.authenticate('github', {
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 
 router.get('/google/callback', passport.authenticate('google', {
-    successRedirect: '/products',
     failureRedirect: '/login'
-}));
+}), (req, res) => {
+    console.log('Usuario autenticado en callback:', req.user);
+    res.redirect('/products');
+});
+
 
 //Ruta current(obtiene el usuario actual)
 router.get('/current', (req, res) => {

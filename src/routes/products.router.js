@@ -1,27 +1,40 @@
 const ProductManager = require("../controllers/productManager");// aca estoy "importando"  productManager.js
 const express = require("express");
 const router = express.Router();
-
+const passport = require("passport")
 
 const products = new ProductManager();
 
 //muestro todos los productos->
-router.get("/", async (req, res) => {
+router.get("/", passport.authenticate('session'), async (req, res) => {
     try {
-        const limit = parseInt (req.query.limit);
-        const prodList = await products.getProducts();
-        console.log(prodList);
-        if (limit>0) {
-            res.json(prodList.slice(0, limit));
-        } else{
-            res.json(prodList);
+        // Verifica si el usuario está autenticado
+        if (!req.user) {
+            return res.status(401).json({ error: "Usuario no autenticado" });
         }
-    }
-    catch (error) {
-        console.error("error del servidor", error);
+        const limit = parseInt(req.query.limit);
+        
+
+        // Accede al cartId del usuario
+        const cartId = req.user.cart;
+
+        // Obtén la lista de productos
+        const prodList = await products.getProducts();
+
+        // Limita la lista de productos si se proporciona un límite
+        let productsToSend = prodList;
+        if (limit > 0) {
+            productsToSend = prodList.slice(0, limit);
+        }
+
+        // Envía la lista de productos al cliente
+        res.json(productsToSend);
+    } catch (error) {
+        console.error("Error del servidor:", error);
         res.status(500).send("Error del servidor");
     }
 });
+
 
 //muestro producto por id->
 router.get("/:id", async (req, res) => {// los ":" antes del id indican que es dinamico. se recibe en los params del req que hace el cliente"

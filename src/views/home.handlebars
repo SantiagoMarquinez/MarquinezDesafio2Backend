@@ -11,7 +11,7 @@
         <p>{{this.thumbnail}}</p>
         <p>{{this.category}}</p>
         <div>
-            <button class="btn" onclick="/api/carts/{{../user.cart}}/product/{{this._id}}">Agregar al carrito</button>
+            <button class="btn" onclick="/api/carts/{{../user.cart._id}}/product/{{this._id}}">Agregar al carrito</button>
         </div>
     </div>
     {{/each}}

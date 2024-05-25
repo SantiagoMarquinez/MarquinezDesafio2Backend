@@ -3,6 +3,7 @@ require('dotenv').config();
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GitHubStrategy = require('passport-github').Strategy;
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const bcrypt = require('bcryptjs');
 const userModel = require('../models/user.model'); 
 
@@ -106,36 +107,31 @@ const initializePassport = () => {
 
     //Estrategia para iniciar sesion con google
 
-    const GoogleStrategy = require('passport-google-oauth20').Strategy;
-
-            // Configuración de Google Strategy
-    passport.use(new GoogleStrategy({
+    passport.use('google', new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         callbackURL: 'http://localhost:8080/api/sessions/google/callback'
-    },
-        async (accessToken, refreshToken, profile, done) => {
-            try {
-                let user = await userModel.findOne({ email: profile.emails[0].value });
-                if (!user) {
-                    const newCart = new CartModel({ products: [], quantity: 0 });
-                    await newCart.save();
-                    let newUser = {
-                        first_name: profile.name.givenName,
-                        last_name: profile.name.familyName,
-                        email: profile.emails[0].value,
-                        age: 18,
-                        cart: newCart._id,
-                        password: createHash('google')
-                    };
-                    user = await userModel.create(newUser);
-                }
-                return done(null, user);
-            } catch (error) {
-                return done(error);
+    }, async (accessToken, refreshToken, profile, done) => {
+        try {
+            let user = await userModel.findOne({ email: profile.emails[0].value });
+            if (!user) {
+                const newCart = await CartModel.create({ products: [], quantity:0 });
+                await newCart.save();
+                let newUser = {
+                    first_name: profile.name.givenName,
+                    last_name: profile.name.familyName,
+                    email: profile.emails[0].value,
+                    age: 18,
+                    cart: newCart._id,
+                    password: createHash('google')
+                };
+                user = await userModel.create(newUser);
             }
+            return done(null, user);
+        } catch (error) {
+            return done(error);
         }
-    ));
+    }));
 
 
     // Serializar y deserializar el usuario para la sesión

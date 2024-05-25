@@ -6,6 +6,8 @@ const expresshandlebars = require("express-handlebars");
 const socket = require("socket.io");
 const cookieParser = require("cookie-parser");
 const passport = require("passport");
+const initializePassport = require("./config/passport.config.js");
+const MongoStore = require('connect-mongo');
 
 const MessageModel = require("./models/message.model.js");
 require("./database.js"); // Conexión con la base de datos: esto hace la conexión con database.js y data base.js hace la conexión con mongodb
@@ -17,7 +19,6 @@ const viewsRouter = require("./routes/views.router.js");
 const userRouter = require("./routes/user.router.js");
 const sessionRouter = require('./routes/session.router.js'); 
 
-const initializePassport = require("./config/passport.config.js");
 
 // Constante de puerto
 const PUERTO = 8080;
@@ -28,11 +29,16 @@ app.use(express.static("./src/public"));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));// extended true indica que trabajamos con datos complejos  (no solo strings)
 
+
 // Configuración de sesiones
 app.use(session({
-    secret: "secretCoder",
-    resave: true,
-    saveUninitialized: true,
+    secret: process.env.SESSION_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+        mongoUrl: process.env.MONGO_URL,
+        ttl: 1 * 24 * 60 * 60  // Tiempo de vida de la sesión en segundos (1 dia en este caso)
+    })
 }));
 
 // Configuración de cookies
@@ -43,6 +49,12 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 initializePassport();
+
+// Middleware global para logs
+app.use((req, res, next) => {
+    console.log('Usuario autenticado (global):', req.user);
+    next();
+});
 
 // Configuración de handlebars
 const hbs = expresshandlebars.create({// esto es para que me permita renderizar los campos de user (configura opciones para el motor de vistas)
@@ -85,6 +97,11 @@ io.on("connection", (socket) => {
     });
 });
 
+
+
+
+
+
 // Manejo de eventos de productos
 const ProductManager = require("./controllers/productManager.js");
 const productManager = new ProductManager("./src/models/productos.json");
@@ -110,6 +127,7 @@ io.on("connection", async (socket) => {
     });
 });
 
+
 // Manejo de eventos de carrito
 const CartManager = require("./controllers/cartManager.js");
 const cartManager = new CartManager();
@@ -120,3 +138,17 @@ io.on("connection", async (socket) => {
     // Envía los datos del carrito al cliente cuando se conecta
     socket.emit("cart", await cartManager.getProductsFromCart());
 });
+
+
+
+
+// app.use((req, res, next) => {
+//     console.log('Usuario autenticado:', req.user);
+//     next();
+// });
+
+
+// app.use('/api/products', (req, res, next) => {
+//     console.log('Usuario autenticado después de Google:', req.user);
+//     next();
+// }, productsRouter);

@@ -8,25 +8,22 @@ class CartManager {
     //obtener productos de un carrito
     async getProductsFromCart(id) {
         try {
-            const cartFound = await CartModel.findById(id);
+            const cartFound = await CartModel.findById(id).populate('products.product');
             if (!cartFound) {
                 return { status: false, message: `ERROR: Carrito no encontrado con ID ${id}` };
             }
-
-            const productsWithDetails = [];
-
-            for (const cartItem of cartFound.products) {
-                // Consulto la coleccion de productos para obtener la informacion completa del producto
-                const product = await ProductModel.findById(cartItem.product);
-                // Combino la información completa del producto con la cantidad correspondiente en el carrito
-                productsWithDetails.push({ product: product, quantity: cartItem.quantity });
-            }
-
+    
+            const productsWithDetails = cartFound.products.map(cartItem => ({
+                product: cartItem.product,
+                quantity: cartItem.quantity
+            }));
+    
             return { status: true, message: 'Carrito encontrado:', cart: productsWithDetails };
         } catch (error) {
             return { status: false, message: `LO SENTIMOS, HA OCURRIDO UN ERROR: ${error}` };
         }
     }
+    
 
 
 
