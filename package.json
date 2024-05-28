@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/app.js "
+    "dev": "nodemon src/app.js --mode desarrollo",
+    "start": "node src/app.js --mode produccion"
   },
   "author": "Santiago G. Marquinez",
   "license": "MIT",
@@ -15,6 +16,7 @@
   "dependencies": {
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
+    "commander": "^12.1.0",
     "connect-mongo": "^5.1.0",
     "cookie-parser": "^1.4.6",
     "dotenv": "^16.4.5",

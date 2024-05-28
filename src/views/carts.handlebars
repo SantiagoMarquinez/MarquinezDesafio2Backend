@@ -4,10 +4,11 @@
     {{#each cart}}
     <div>
         <div class="card">
-            <p>ID del Producto: {{this.product._id}}</p>
+            <p>$ {{this.product.price}}</p>
             <p>Título: {{this.product.title}}</p>
             <p>Descripción: {{this.product.description}}</p>
             <p>Cantidad: {{this.quantity}}</p>
+            <p>ID del Producto: {{this.product._id}}</p>
         </div>
     </div>
     {{/each}}

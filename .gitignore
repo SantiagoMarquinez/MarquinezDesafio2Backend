@@ -1,4 +1,6 @@
 node_modules/
 PENDIENTES.txt
 .env
+.env.development
+.env.production
 e -i HEAD~4

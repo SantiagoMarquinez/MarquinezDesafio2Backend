@@ -9,6 +9,11 @@ const passport = require("passport");
 const initializePassport = require("./config/passport.config.js");
 const MongoStore = require('connect-mongo');
 
+const configObject = require("./config/config.js");
+const program = require("./utils/commander.js");
+const { mongo_url,puerto } = configObject;
+
+
 const MessageModel = require("./models/message.model.js");
 require("./database.js"); // Conexión con la base de datos: esto hace la conexión con database.js y data base.js hace la conexión con mongodb
 
@@ -20,15 +25,14 @@ const userRouter = require("./routes/user.router.js");
 const sessionRouter = require('./routes/session.router.js'); 
 
 
-// Constante de puerto
-const PUERTO = 8080;
-
 // Middleware
 app.use(express.static("./src/public"));
 //con estas dos lineas el servidor express puede interpretar mensajes de tipo json en formato urlencoded que recibira de postman
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));// extended true indica que trabajamos con datos complejos  (no solo strings)
 
+    // Configuración de cookies
+    app.use(cookieParser());
 
 // Configuración de sesiones
 app.use(session({
@@ -36,13 +40,11 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     store: MongoStore.create({
-        mongoUrl: process.env.MONGO_URL,
+        mongoUrl: mongo_url,
         ttl: 1 * 24 * 60 * 60  // Tiempo de vida de la sesión en segundos (1 dia en este caso)
     })
 }));
 
-// Configuración de cookies
-app.use(cookieParser());
 
 // Inicialización de Passport
 app.use(passport.initialize());
@@ -76,8 +78,8 @@ app.use("/api/users", userRouter);
 app.use('/api/sessions', sessionRouter);
 app.use("/", viewsRouter);
 
-const httpserver = app.listen(PUERTO, () => {
-    console.log(`Esta aplicación funciona en el puerto ${PUERTO}`);
+const httpserver = app.listen(puerto, () => {
+    console.log(`Esta aplicación funciona en el puerto ${puerto} `);
 });
 
 const io = socket(httpserver);
